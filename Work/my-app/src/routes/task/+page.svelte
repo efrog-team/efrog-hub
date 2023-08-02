@@ -27,6 +27,13 @@
         anchor.click()
         anchor.remove()
 
+
+        const answer = await fetch('/api/task', {
+            method: 'GET'
+        });
+        let db = await answer.json();
+        console.log(db)
+
     }
     function create_test() {
         if (test_amount < test.length) {
@@ -204,7 +211,7 @@
             {/each}
 
             <button on:click={create_file} class="submit_button">Створити задачу</button>
-            <button class="submit_button" style="padding-bottom: 0; margin-right: 0; margin-bottom:0; float:right"><a href= {url} download style="color: white; text-decoration:none;">Завантажити файл</a></button>
+            <button class="submit_button" style="padding-bottom: 0; margin-right: 0; margin-bottom:0; float:right">Завантажити файл</button>
             
 
         </div>

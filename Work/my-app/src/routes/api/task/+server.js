@@ -49,12 +49,12 @@ export async function POST({ request }) {
     fs.writeFileSync(main_path + 'output.zip', zip.toBuffer());
 
 
-    return json(main_path + 'output.zip');
+    return json('/public/' + curent_sesion + '/output.zip');
 }
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET() {
-    fs.rmdir( main_path, { recursive:true }, (err) => { 
+    fs.rmdir( "./static/public/"+ curent_sesion, { recursive:true }, (err) => { 
         console.error(err); 
       });
     return new Response(String(1))
