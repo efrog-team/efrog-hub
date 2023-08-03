@@ -16,12 +16,7 @@
       });
 
       const total = await response.json();
-
-      if (response.ok) {
-        console.log(total);
-      } else {
-        alert('Произошла ошибка при загрузке файла на сервер.');
-      }
+      console.log(total);
     } catch (error) {
       alert('Произошла ошибка при отправке файла на сервер.');
       console.error(error);
@@ -38,14 +33,6 @@
 </svelte:head>
 <main>
     <div class="content">
-        <div id="header" class="header">
-            <div style="display: inline; float:left; margin-top: 6px; margin-left: 15px;"><a href="\main"><img src="logo.png" class="menu_photo" alt=" "></a></div>
-            <div style="display: inline; float:right; margin-top: 6px;"><a href="\for-user"><img src="favicon.png" class="menu_photo" alt=" "></a></div>
-            <div style="display: inline; float:right; margin-top: 30px;">   
-                <a href="\finding-task" class="menu_text">Задачі</a>
-                <a href="\olimpiad" class="menu_text">Олімпіади</a>
-            </div>
-        </div>
         <div style="padding: 5vw;">
             <input type="file" on:change={handleFileUpload} />
         </div>

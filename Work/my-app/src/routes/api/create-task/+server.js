@@ -21,6 +21,7 @@ function clear_dir (main_path) {
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST( {request} ) {
+    tests = []
     const formData = await request.formData();
     const file = formData.get('file');
 
