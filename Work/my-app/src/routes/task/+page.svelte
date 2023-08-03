@@ -94,7 +94,7 @@
     <div class="content">
         <div style="padding: 2vw;">
 
-            <p><b>Загальна інформація</b></p>
+            <p class="acent-text"><b>Загальна інформація</b></p>
             <p>Назва</p>
             <input type="text" id="task_name" bind:value={task_name}>
             <p>Час виконання</p>
@@ -102,7 +102,8 @@
             <p>Обсяг пам'яті</p>
             <input type="text" id="memory_limit" bind:value={memory_limit}>
             <br>
-            <p><b>Формування умови</b></p>
+
+            <p class="acent-text"><b>Формування умови</b></p>
             <p>Умова</p>
             <textarea name="statement" id="statement" class="statement" bind:value={statement}></textarea>
             <p>Умова до вхідних даних</p>
@@ -111,9 +112,9 @@
             <textarea name="outnput_statement" id="outnput_statement" class="statement" bind:value={output_statement}></textarea>
             <p>Примітки</p>
             <textarea name="notes" id="notes" class="statement" bind:value={note}></textarea>
-            
             <br>
-            <p><b>Тести</b></p>
+
+            <p class="acent-text"><b>Тести</b></p>
             <p>Кількість тестів</p>
             <input type="text" id="tests_amount" style="display: inline; float:left; margin-right: 3vw; width: 44vw" bind:value={test_amount}>
             <button on:click={create_test} class="submit_button" style="margin-top: 7px; margin-right: 0; float:right;">Створити тести</button>
@@ -156,8 +157,8 @@
     input{
         outline: none;
         border: none;
-        background-color: rgb(57, 61, 69);
-        border-bottom: 4px solid rgb(33, 121, 45);
+        background-color: #333333;
+        border-bottom: 4px solid #28743b;
         width: 95vw;
         height: 56px;
         margin-top: 7px;
@@ -170,8 +171,8 @@
     .statement{
         outline: none;
         border: none;
-        background-color: rgb(57, 61, 69);
-        border-bottom: 4px solid rgb(33, 121, 45);
+        background-color: #333333;
+        border-bottom: 4px solid #28743b;
         width: 95vw;
         height: 100px;
         color: white;
@@ -183,7 +184,7 @@
     .test_area{
         outline: none;
         border: none;
-        background-color: rgb(41, 44, 51);
+        background-color: #252526;
         width: 25vw;
         height: 60px;
         color: white;
@@ -196,7 +197,7 @@
     select{
         outline: none;
         border: none;
-        background-color: rgb(41, 44, 51);
+        background-color: #252526;
         width: 25vw;
         height: 60px;
         color: white;
@@ -209,8 +210,8 @@
     .test_header{
         width: 95vw;
         height: 70px;
-        background-color: rgb(57, 61, 69);
-        border: 4px solid rgb(33, 121, 45);
+        background-color: #333333;
+        border: 4px solid #28743b;
         display:flex;
         margin-top: 15px;
         color: white;
@@ -223,8 +224,8 @@
     .test{
         width: 95vw;
         height: 70px;
-        background-color: rgb(41, 44, 51);
-        border-bottom: 4px solid rgb(33, 121, 45);
+        background-color: #252526;
+        border-bottom: 4px solid #28743b;
         display:flex;
         margin-top: 15px;
         color: white;
@@ -240,8 +241,8 @@
     .submit_button{
         width: 44vw;
         height: 60px;
-        background-color: rgb(33, 121, 45);
-        border: 4px solid rgb(33, 121, 45);
+        background-color: #28743b;
+        border: 4px solid #28743b;
         margin-right: 4vw;
         margin-top: 15px;
         display:inline;
@@ -251,5 +252,8 @@
         font-family: "e-Ukraine";
         text-align: center;
         text-decoration: none;
+    }
+    .acent-text{
+        color:#28743b
     }
 </style>
