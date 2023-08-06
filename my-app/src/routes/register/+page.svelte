@@ -4,6 +4,7 @@
     let password;
 
     async function create_account () {
+        //тут проверку значений
         const response = await fetch('/api/register', {
             method: 'POST',
             body: JSON.stringify({ login, email, password }),
@@ -38,6 +39,7 @@
         <input type="text" bind:value={password}>
         <br>
         <button on:click={create_account}>створити акаунт</button>
+        
     </div>
 
 </main>
