@@ -32,6 +32,7 @@
         <div class="main">
             <a href="/task">task</a>
             <a href="/create-task">create-task</a>
+            <a href="/register">register</a>
             <input type="number" bind:value={a}> +
             <input type="number" bind:value={b}> =
             {total}

@@ -22,7 +22,9 @@
 	"type": "module",
 	"dependencies": {
 		"adm-zip": "^0.5.10",
+		"bcrypt": "^5.1.0",
 		"fs": "^0.0.1-security",
-		"mysql": "^2.18.1"
+		"mysql": "^2.18.1",
+		"mysql2": "^3.5.2"
 	}
 }
