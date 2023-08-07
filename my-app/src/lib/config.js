@@ -1,0 +1,1 @@
+export let config =  {secret: "Secret_Key"}
