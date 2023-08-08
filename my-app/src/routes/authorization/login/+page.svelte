@@ -6,14 +6,11 @@
 
     async function get_account () {
         //тут проверку значений
-        const response = await fetch('/api/login', {
+        const response = await fetch('/api/authorization/login', {
             method: 'POST',
             body: JSON.stringify({ login,  password }),
         });
         invalidateAll()
-        
-        err = await response.json();
-        console.log(err)
     }
 
 </script>
@@ -55,7 +52,7 @@
 </style>
 
 <svelte:head>
-    <title>Logins</title>
+    <title>Login</title>
 </svelte:head>
 
 <main>
@@ -64,7 +61,7 @@
         <input type="text" bind:value={login}>
         <p>Password</p>
         <input type="text" bind:value={password}>
-        <p style="font-size: 18px;">Немаэ акаунту? <a href="/register" style="color:white">Створити</a></p> 
+        <p style="font-size: 18px;">Немаэ акаунту? <a href="/authorization/register" style="color:white">Створити</a></p> 
         <button on:click={get_account}>Увійти в акаунт</button>
 
         {#if err}

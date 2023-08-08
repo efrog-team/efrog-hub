@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
-
-import * as db from 'D:/Work/database/database.js'
+import * as db from '$lib/database/database'
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
@@ -11,7 +10,7 @@ export async function POST({ request }) {
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET() {
-    const content = db.get_database();
+    const content = db.send();
     return new Response(String(content))
 }
 

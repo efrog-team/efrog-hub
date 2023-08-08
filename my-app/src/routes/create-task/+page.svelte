@@ -1,40 +1,66 @@
 <script>
-  async function handleFileUpload(event) {
-    const fileInput = event.target;
-    if (fileInput.files.length === 0) {
-      return; // Ничего не делаем, если файл не выбран
+  import { goto } from '$app/navigation';
+  export let data;
+  let name
+  let id = data.id
+  async function create_task () {
+    if (id == undefined) {
+      console.log("Доступно тільки для зареєстрованих користувачів")
+      return 1;
     }
+    const response = await fetch('/api/create-task1', {
+            method: 'POST',
+            body: JSON.stringify({id, name}),
+        });
 
-    const file = fileInput.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
+        const task_id = await response.json();
 
-    try {
-      const response = await fetch('/api/create-task', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const total = await response.json();
-      console.log(total);
-    } catch (error) {
-      alert('Произошла ошибка при отправке файла на сервер.');
-      console.error(error);
-    }
+        goto(`task/${task_id}/general-info`);
   }
+
 </script>
 
-<style>
- 
-</style>
+
+
 
 <svelte:head>
     <title>Create task</title>
 </svelte:head>
 <main>
-    <div class="content">
-        <div style="padding: 5vw;">
-            <input type="file" on:change={handleFileUpload} />
-        </div>
+    <div style="padding: 2vw; text-align:center;">
+      <input type="text"  bind:value={name}>
+      <button on:click={create_task}>Створити задачу</button>
     </div>
 </main>
+
+<style>
+  input{
+      outline: none;
+      border: none;
+      background-color: #333333;
+      border-bottom: 4px solid #28743b;
+      width: 44vw;
+      height: 56px;
+      margin-top: 7px;
+      margin-bottom: 44px;
+      color: white;
+      font-size: 22px;
+      font-family: "e-Ukraine";
+      display:flex;
+  }
+  button{
+      width: 44vw;
+      height: 60px;
+      background-color: #28743b;
+      border: 4px solid #28743b;
+      margin-right: 4vw;
+      margin-top: 15px;
+      display:inline;
+      float: left;
+      color: white;
+      font-size: 22px;
+      font-family: "e-Ukraine";
+      text-align: center;
+      text-decoration: none;
+  }
+</style>

@@ -1,4 +1,6 @@
+import { json } from "@sveltejs/kit";
+
 export async function PUT({cookies}) {
     cookies.delete("token", { path: '/' });
-    return new Response(null, { status: 204 });
+    return json(1);
 }

@@ -8,7 +8,7 @@
 
     async function create_account () {
         //тут проверку значений
-        const response = await fetch('/api/register', {
+        const response = await fetch('/api/authorization/register', {
             method: 'POST',
             body: JSON.stringify({ login, email, password }),
         });
@@ -50,7 +50,7 @@
             <p style="color:red; font-size: 16px">Пароль має скаладатись як мінімум з 4 символів</p>
         {/if}
         
-        <p style="font-size: 18px;">Є акаунт? <a href="/login" style="color:white">Увійти</a></p> 
+        <p style="font-size: 18px;">Є акаунт? <a href="/authorization/login" style="color:white">Увійти</a></p> 
         <button on:click={create_account}>Cтворити акаунт</button>
         {#if err}
             <p>{err}</p>
