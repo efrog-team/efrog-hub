@@ -1,13 +1,17 @@
 import { json } from '@sveltejs/kit';
-
+import * as db from '$lib/database/database'
 import fs from 'fs';
 import AdmZip from 'adm-zip';
 
-let curent_sesion = 'curent_sesion'
-
 /** @type {import('./$types').RequestHandler} */
-export async function POST({ request }) {
-    let {task_name, time_limit, memory_limit, statement, input_statement, output_statement, note, test} = await request.json();
+export async function POST({ request, cookies }) {
+    const curent_sesion = cookies.get('token');
+    const {task_id} = await request.json();
+    //{name, time_limit, memory_limit, statement, input_statement, output_statement, note, test}
+
+    const test = await db.send(`SELECT test_id, input, output, status FROM test WHERE task_id = '${task_id}'`);
+    const query = await db.send(`SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note FROM task WHERE id = '${task_id}'`);
+    const {name, time_limit, memory_limit, statement, input_statement, output_statement, note} = query[0];
 
     fs.mkdirSync("./static/public/"+ curent_sesion);
 
@@ -23,7 +27,7 @@ export async function POST({ request }) {
     fs.mkdirSync(main_path + 'examples/output');
 
 
-    fs.writeFileSync(main_path + 'general_info/name.txt', task_name);
+    fs.writeFileSync(main_path + 'general_info/name.txt', name);
     fs.writeFileSync(main_path + 'general_info/time_limit.txt', time_limit);
     fs.writeFileSync(main_path + 'general_info/memory_limit.txt', memory_limit);
     
@@ -35,12 +39,12 @@ export async function POST({ request }) {
     for(let i = 0; i< test.length; i++){
         let test_case = test[i];
         if (test_case.status == "Closed"){
-            fs.writeFileSync(main_path + 'tests/input/' + test_case.id+'.txt', test_case.input);
-            fs.writeFileSync(main_path + 'tests/output/' + test_case.id+'.txt', test_case.output);
+            fs.writeFileSync(main_path + 'tests/input/' + test_case.test_id +'.txt', test_case.input);
+            fs.writeFileSync(main_path + 'tests/output/' + test_case.test_id+'.txt', test_case.output);
         }
         else{
-            fs.writeFileSync(main_path + 'examples/input/' + test_case.id+'.txt', test_case.input);
-            fs.writeFileSync(main_path + 'examples/output/' + test_case.id+'.txt', test_case.output);
+            fs.writeFileSync(main_path + 'examples/input/' + test_case.test_id+'.txt', test_case.input);
+            fs.writeFileSync(main_path + 'examples/output/' + test_case.test_id+'.txt', test_case.output);
         }
 
     }
@@ -53,7 +57,8 @@ export async function POST({ request }) {
 }
 
 /** @type {import('./$types').RequestHandler} */
-export async function GET() {
+export async function PUT({cookies}) {
+    const curent_sesion = cookies.get('token');
     fs.rmdir( "./static/public/"+ curent_sesion, { recursive:true }, (err) => { 
         console.error(err); 
       });

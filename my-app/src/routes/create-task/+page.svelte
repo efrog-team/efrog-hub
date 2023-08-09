@@ -27,7 +27,7 @@
     <title>Create task</title>
 </svelte:head>
 <main>
-    <div style="padding: 2vw; text-align:center;">
+    <div style="padding: 2vw;">
       <input type="text"  bind:value={name}>
       <button on:click={create_task}>Створити задачу</button>
     </div>
@@ -43,6 +43,7 @@
       height: 56px;
       margin-top: 7px;
       margin-bottom: 44px;
+      margin-left: 26vw;
       color: white;
       font-size: 22px;
       font-family: "e-Ukraine";
@@ -55,12 +56,12 @@
       border: 4px solid #28743b;
       margin-right: 4vw;
       margin-top: 15px;
-      display:inline;
-      float: left;
+      margin-left: 26vw;
       color: white;
       font-size: 22px;
       font-family: "e-Ukraine";
       text-align: center;
       text-decoration: none;
   }
+  
 </style>

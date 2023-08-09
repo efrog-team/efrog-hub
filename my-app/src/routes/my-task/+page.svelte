@@ -9,6 +9,32 @@
        color:white;
        font-family: "e-Ukraine";
        font-size: 22px;
+       margin: auto;
+
+   }
+   a{
+        color:white;
+        font-family: "e-Ukraine";
+        font-size: 18px;
+        margin: auto;
+        text-decoration: none;
+   }
+   table{
+        width: 96vw;
+        background-color: #28743b;
+        margin-top: 15px;
+        font-size: 18px;
+        color: white;
+        font-family: "e-Ukraine";
+        text-align: center;
+   }
+   th{
+    background-color: #252526;
+    height: 35px;
+   }
+   td{
+    background-color: #333333;
+    height: 30px;
    }
 </style>
 
@@ -19,8 +45,22 @@
 <main>
     <div style="padding: 2vw;">
         <p>Мої завдання</p>
-        {#each task as task}
-            <p>{task.name} {task.status} <a href="task/{task.task_id}/general-info">Перейти до редагування завдання</a></p>
-        {/each}
+        <table>
+            <tr>
+                <th>ID задачі</th>
+                <th>Назва задачі</th>
+                <th>Авторство</th>
+                <th>Дії</th>
+            </tr>
+            {#each task as task}
+                <tr>
+                    <td>{task.task_id}</td>
+                    <td>{task.name}</td>
+                    <td>{task.status}</td>
+                    <td><a href="task/{task.task_id}/general-info">Редагувати</a></td>
+                </tr>
+            {/each}
+        </table>
+
     </div>
 </main>

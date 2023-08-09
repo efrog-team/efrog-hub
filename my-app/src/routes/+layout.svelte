@@ -24,8 +24,8 @@
             {/if}
     </div>
     <div style="display: inline; float:right; margin-top: 30px;">   
-        <a href="/my-task" class="menu_text">Пошук задач</a>
-        <a href="/" class="menu_text">Створити задачу</a>
+        <a href="/my-task" class="menu_text">Мої задачі</a>
+        <a href="/create-task" class="menu_text">Створити задачу</a>
     </div>
 </div>
 <slot></slot>

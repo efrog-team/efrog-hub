@@ -1,15 +1,15 @@
-import mysql from 'mysql2/promise'
+import mysql from 'mysql2'
 
 export let send = async (sql) => {
 
 
-    const connection = await mysql.createConnection({
+    const pool = mysql.createPool({
         host: "localhost",
         user: "root",
         database: "my-project",
         password: "root",
     })
-
-    const [rows, fields] = await connection.execute(sql)
+    const promisePool = pool.promise();
+    const [rows, fields] = await promisePool.execute(sql)
     return rows
 }
