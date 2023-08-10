@@ -31,10 +31,10 @@ export async function POST({ request, cookies }) {
     fs.writeFileSync(main_path + 'general_info/time_limit.txt', time_limit);
     fs.writeFileSync(main_path + 'general_info/memory_limit.txt', memory_limit);
     
-    fs.writeFileSync(main_path + 'statement/statement.txt', statement);
-    fs.writeFileSync(main_path + 'statement/input_statement.txt', input_statement);
-    fs.writeFileSync(main_path + 'statement/output_statement.txt', output_statement);
-    fs.writeFileSync(main_path + 'statement/note.txt', note);
+    fs.writeFileSync(main_path + 'statement/statement.tex', statement);
+    fs.writeFileSync(main_path + 'statement/input_statement.tex', input_statement);
+    fs.writeFileSync(main_path + 'statement/output_statement.tex', output_statement);
+    fs.writeFileSync(main_path + 'statement/note.tex', note);
     
     for(let i = 0; i< test.length; i++){
         let test_case = test[i];

@@ -2,22 +2,29 @@
     import { invalidateAll } from '$app/navigation';
 
     export let data;
-    let task = data.query[0]
     let id = data.task_id;
-    let name = task.name;
-    let time_limit = task.time_limit;
-    let memory_limit = task.memory_limit;
+    let name = data.query[0].name;
+    let time_limit = data.query[0].time_limit;
+    let memory_limit = data.query[0].memory_limit;
     let author
-
+    const valid_limit = new RegExp(/^-?\d+(\.\d+)?$/)
 
     async function save () {
-        const res = await fetch('/api/task1/general-info',{
+        if(!valid_limit.test(time_limit) || !valid_limit.test(memory_limit)){
+            alert("Введіть коректні дані")
+            return 1;
+        }
+        if(name == data.query[0].name && time_limit == data.query[0].time_limit && memory_limit == data.query[0].memory_limit){
+            alert("Дані не змінилися")
+            return 1;
+        }
+        const res = await fetch('/api/task/general-info',{
         method: 'POST',
         body: JSON.stringify({name, time_limit, memory_limit, id})
         });
-
+        invalidateAll()
         const answ = await res.json();
-        console.log(answ)
+        alert(answ)
     }
     async function add_author () {
         const res = await fetch('/api/add_author',{
@@ -43,8 +50,14 @@
             <input type="text" id="task_name" bind:value={name}>
             <p>Час виконання</p>
             <input type="text" id="time_limit" bind:value={time_limit}>
+            {#if time_limit != undefined && !valid_limit.test(time_limit)}
+                <p style="color:red; font-size: 16px">Введіть тільки число у мілісекундах</p>
+            {/if}
             <p>Обсяг пам'яті</p>
             <input type="text" id="memory_limit" bind:value={memory_limit}>
+            {#if memory_limit != undefined && !valid_limit.test(memory_limit)}
+            <p style="color:red; font-size: 16px">Введіть тільки число у кілобайтах</p>
+            {/if}
             <button on:click={save}>Зберегти зміни</button>
         </div>
         <div style="display: inline; float:left;">

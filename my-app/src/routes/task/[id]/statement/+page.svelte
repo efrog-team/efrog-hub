@@ -1,15 +1,18 @@
 <script>
     export let data;
-    let task = data.query[0];
     let id = data.task_id;
-    let statement = task.statement;
-    let input_statement = task.input_satement;
-    let output_statement = task.output_statement;
-    let note = task.note;
+    let statement = data.query[0].statement;
+    let input_statement = data.query[0].input_statement;
+    let output_statement = data.query[0].output_statement;
+    let note = data.query[0].note;
 
 
     async function save () {
-        const res = await fetch('/api/task1/statement',{
+        if(statement == data.query[0].statement && input_statement == data.query[0].input_statement && output_statement == data.query[0].output_statement && note == data.query[0].note){
+            alert("Дані не змінилися")
+            return 1;
+        }
+        const res = await fetch('/api/task/statement',{
         method: 'POST',
         body: JSON.stringify({statement, input_statement, output_statement, note, id})
         });

@@ -65,7 +65,7 @@ export async function POST( {request, cookies} ) {
         return json("Directory statement does not exist");
     }
 
-    if(!fs.existsSync(main_path + 'statement/statement.txt')){
+    if(!fs.existsSync(main_path + 'statement/statement.tex')){
         clear_dir (main_path);
         return json("File statement.txt does not exist");
     }
@@ -104,18 +104,18 @@ export async function POST( {request, cookies} ) {
     time_limit = fs.readFileSync(main_path + 'general_info/time_limit.txt' , 'utf-8');
     memory_limit = fs.readFileSync(main_path + 'general_info/memory_limit.txt', 'utf-8');
 
-    statement = fs.readFileSync(main_path + 'statement/statement.txt', 'utf-8');
+    statement = fs.readFileSync(main_path + 'statement/statement.tex', 'utf-8');
 
-    if(fs.existsSync(main_path + 'statement/input_statement.txt')){
-        input_statement = fs.readFileSync(main_path + 'statement/input_statement.txt' , 'utf-8');
+    if(fs.existsSync(main_path + 'statement/input_statement.tex')){
+        input_statement = fs.readFileSync(main_path + 'statement/input_statement.tex', 'utf-8');
     }
 
-    if(fs.existsSync(main_path + 'statement/output_statement.txt')){
-        output_statement = fs.readFileSync(main_path + 'statement/output_statement.txt' , 'utf-8');
+    if(fs.existsSync(main_path + 'statement/output_statement.tex')){
+        output_statement = fs.readFileSync(main_path + 'statement/output_statement.tex', 'utf-8');
     }
 
-    if(fs.existsSync(main_path + 'statement/note.txt')){
-        note = fs.readFileSync(main_path + 'statement/note.txt' , 'utf-8');
+    if(fs.existsSync(main_path + 'statement/note.tex')){
+        note = fs.readFileSync(main_path + 'statement/note.tex', 'utf-8');
     }
 
     let input = fs.readdirSync(main_path + 'examples/input');
