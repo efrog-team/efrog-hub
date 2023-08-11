@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import  {config} from '$lib/config';
+import  {config} from '$lib/server/config';
 
 import * as db from '$lib/database/database'
 import * as bcrypt from 'bcrypt';

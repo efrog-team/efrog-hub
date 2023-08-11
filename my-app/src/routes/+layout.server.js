@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import  {config} from '$lib/config';
+import  {config} from '$lib/server/config';
 
 /** @type {import('./$types').LayoutServerLoad} */
 export async function load({ cookies }) {

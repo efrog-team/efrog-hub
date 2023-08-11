@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import  {config} from '$lib/config';
+import  {config} from '$lib/server/config';
 import {authorization} from '$lib/server/check.js'
 import { redirect } from '@sveltejs/kit';
 import * as db from '$lib/database/database'

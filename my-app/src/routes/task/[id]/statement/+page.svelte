@@ -1,14 +1,16 @@
 <script>
+    import { onMount } from 'svelte';
+
     export let data;
     let id = data.task_id;
-    let statement = data.query[0].statement;
-    let input_statement = data.query[0].input_statement;
-    let output_statement = data.query[0].output_statement;
-    let note = data.query[0].note;
-
+    let statement = data.task.statement;
+    let input_statement = data.task.input_statement;
+    let output_statement = data.task.output_statement;
+    let note = data.task.note;
+    let textareaRefs = [];
 
     async function save () {
-        if(statement == data.query[0].statement && input_statement == data.query[0].input_statement && output_statement == data.query[0].output_statement && note == data.query[0].note){
+        if(statement == data.task.statement && input_statement == data.task.input_statement && output_statement == data.task.output_statement && note == data.task.note){
             alert("Дані не змінилися")
             return 1;
         }
@@ -18,11 +20,20 @@
         });
 
         const answ = await res.json();
-        console.log(answ)
+        alert(answ)
     }
+    function resize(event) {
+        const getElement = event.target;
+        getElement.style.height = "auto";
+        getElement.style.height = Math.max(getElement.scrollHeight, getElement.offsetHeight) + "px";
+    }
+
+    onMount(() => {
+        textareaRefs.forEach(textarea => {
+            resize({ target: textarea });
+        });
+    });
 </script>
-
-
 
 <svelte:head>
     <title>Create task</title>
@@ -31,13 +42,13 @@
 <main>
     <div style="padding: 2vw;">
         <p>Умова</p>
-        <textarea name="statement" id="statement" class="statement" bind:value={statement}></textarea>
+        <textarea name="statement" id="statement"  bind:value={statement} bind:this={textareaRefs[0]} on:input={resize}></textarea>
         <p>Умова до вхідних даних</p>
-        <textarea name="input_statement" id="input_statement" class="statement" bind:value={input_statement}></textarea>
+        <textarea name="input_statement" id="input_statement"  bind:value={input_statement} bind:this={textareaRefs[1]} on:input={resize}></textarea>
         <p>Умова до вихідних даних</p>
-        <textarea name="outnput_statement" id="outnput_statement" class="statement" bind:value={output_statement}></textarea>
+        <textarea name="output_statement" id="output_statement"  bind:value={output_statement} bind:this={textareaRefs[2]} on:input={resize}></textarea>
         <p>Примітки</p>
-        <textarea name="notes" id="notes" class="statement" bind:value={note}></textarea>
+        <textarea name="note" id="note"  bind:value={note} bind:this={textareaRefs[3]} on:input={resize}></textarea>
         <button on:click={save}>Зберегти зміни</button>
     </div>
 </main>
@@ -48,7 +59,7 @@
         font-family: "e-Ukraine";
         font-size: 22px;
     }
-    .statement{
+    textarea{
         outline: none;
         border: none;
         background-color: #333333;
@@ -56,7 +67,7 @@
         width: 95vw;
         height: 100px;
         color: white;
-        font-size: 22px;
+        font-size: 18px;
         font-family: "e-Ukraine";
         resize: none;
         display:flex;

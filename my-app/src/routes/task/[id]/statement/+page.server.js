@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import  {config} from '$lib/config';
+import  {config} from '$lib/server/config';
 import {authorization} from '$lib/server/check.js'
 import { redirect } from '@sveltejs/kit';
 import * as db from '$lib/database/database'
@@ -20,6 +20,7 @@ export async function load({ cookies, params }) {
         throw redirect(300, "/access-denied")
     }
     // Отримання даних задачі з бази даних
-    const query = await db.send(`SELECT statement, input_statement, output_statement, note FROM task WHERE id = '${task_id}'`)
-    return {task_id, query};
+    let task = await db.send(`SELECT statement, input_statement, output_statement, note FROM task WHERE id = '${task_id}'`)
+    task = task[0]
+    return {task_id, task};
 }

@@ -25,6 +25,7 @@
 		"bcrypt": "^5.1.0",
 		"fs": "^0.0.1-security",
 		"jsonwebtoken": "^9.0.1",
+		"katex": "^0.16.8",
 		"mysql": "^2.18.1",
 		"mysql2": "^3.6.0",
 		"path": "^0.12.7",
