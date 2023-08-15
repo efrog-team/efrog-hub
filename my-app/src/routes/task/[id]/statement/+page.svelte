@@ -153,7 +153,7 @@
         font-size: 22px;
     }
     button{
-        width: 95vw;
+        width: 95.5vw;
         height: 60px;
         background-color: #28743b;
         border: 4px solid #28743b;
