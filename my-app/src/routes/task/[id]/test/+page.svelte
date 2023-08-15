@@ -2,7 +2,7 @@
     export let data;
     let id = data.task_id;
     let test = data.query;
-    let test_amount = 1;
+    let test_amount = test.length;
 
     async function save () {
         const res = await fetch('/api/task/test',{
@@ -37,7 +37,7 @@
 <main>
     <div style="padding: 2vw;">
         <p>Кількість тестів</p>
-        <input type="text" id="tests_amount" style="display: inline; float:left; margin-right: 3vw; width: 44vw" bind:value={test_amount}>
+        <input type="text" id="tests_amount" style="display: inline; float:left; margin-right: 3vw; " bind:value={test_amount}>
         <button on:click={create_test} class="submit_button" style="margin-top: 7px; margin-right: 0; float:right;">Створити тести</button>
 
         <table>
@@ -77,7 +77,7 @@
         border: none;
         background-color: #333333;
         border-bottom: 4px solid #28743b;
-        width: 95vw;
+        width: 45vw;
         height: 56px;
         margin-top: 7px;
         margin-bottom: 44px;
@@ -115,14 +115,14 @@
     }
 
     .submit_button{
-        width: 44vw;
+        width: 45vw;
+        float: right;
     }
     button{
         width: 96vw;
         height: 60px;
         background-color: #28743b;
         border: 4px solid #28743b;
-        margin-right: 4vw;
         margin-top: 15px;
         display:inline;
         float: left;
@@ -140,13 +140,13 @@
         color: white;
         font-family: "e-Ukraine";
         text-align: center;
-   }
-   th{
-    background-color: #252526;
-    height: 35px;
-   }
-   td{
-    background-color: #333333;
-    height: 30px;
-   }
+    }
+    th{
+        background-color: #252526;
+        height: 35px;
+    }
+    td{
+        background-color: #333333;
+        height: 30px;
+    }
 </style>
