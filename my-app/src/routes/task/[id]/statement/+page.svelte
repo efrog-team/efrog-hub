@@ -1,7 +1,8 @@
 <script>
     import { onMount } from 'svelte';
     import { generate_formula } from '$lib/database/katex.js';
-  
+    import  {message} from '$lib/message.js';
+    
     export let data;
     let id, statement, input_statement, output_statement, note;
   
@@ -19,8 +20,8 @@
         const outputStatementForSend = document.getElementById("output_statement").innerHTML.replace(/&amp;/g, '&');
         const noteForSend = document.getElementById("note").innerHTML.replace(/&amp;/g, '&');
         if(statementForSend == data.task.statement && inputStatementForSend == data.task.input_statement && outputStatementForSend == data.task.output_statement && noteForSend == data.task.note){
-            alert("Дані не змінилися")
-            return 1;
+            message("Дані не змінилися", false);
+            return;
         }
         const res = await fetch('/api/task/statement',{
         method: 'POST',
@@ -28,7 +29,11 @@
         });
 
         const answ = await res.json();
-        alert(answ)
+        if (answ == "Зміни збережені"){
+            message(answ, true);
+            return;
+        }
+        message(answ, false);
     }
   
     let cursorPosition = { start: 0, end: 0 };

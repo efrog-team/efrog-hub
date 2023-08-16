@@ -1,21 +1,23 @@
 <script>
     import { invalidateAll } from '$app/navigation';
-
+    import {message} from '$lib/message.js'
     export let data;
     let id = data.task_id;
     let name = data.query[0].name;
     let time_limit = data.query[0].time_limit;
     let memory_limit = data.query[0].memory_limit;
     let author
-    const valid_limit = new RegExp(/^-?\d+(\.\d+)?$/)
+    const valid_time = new RegExp(/^(10|[1-9](\.\d+)?)$/);
+    const valid_memory= new RegExp(/^(1|2(?:[0-4]\d|5[0-6])|\d{1,2})(\.\d+)?$/);
+
 
     async function save () {
-        if(!valid_limit.test(time_limit) || !valid_limit.test(memory_limit)){
-            alert("Введіть коректні дані")
+        if(!valid_time.test(time_limit) || !valid_memory.test(memory_limit)){
+            message("Введіть коректні дані", false);
             return 1;
         }
         if(name == data.query[0].name && time_limit == data.query[0].time_limit && memory_limit == data.query[0].memory_limit){
-            alert("Дані не змінилися")
+            message("Дані не змінилися", false);
             return 1;
         }
         const res = await fetch('/api/task/general-info',{
@@ -24,7 +26,7 @@
         });
         invalidateAll()
         const answ = await res.json();
-        alert(answ)
+        message(answ, true);
     }
     async function add_author () {
         const res = await fetch('/api/add_author',{
@@ -50,13 +52,13 @@
             <input type="text" id="task_name" bind:value={name}>
             <p>Час виконання</p>
             <input type="text" id="time_limit" bind:value={time_limit}>
-            {#if time_limit != undefined && !valid_limit.test(time_limit)}
-                <p style="color:red; font-size: 16px">Введіть тільки число у мілісекундах</p>
+            {#if time_limit != undefined && !valid_time.test(time_limit)}
+                <p style="color:red; font-size: 16px">Введіть тільки число у секундах, яке не більше 10</p>
             {/if}
             <p>Обсяг пам'яті</p>
             <input type="text" id="memory_limit" bind:value={memory_limit}>
-            {#if memory_limit != undefined && !valid_limit.test(memory_limit)}
-            <p style="color:red; font-size: 16px">Введіть тільки число у кілобайтах</p>
+            {#if memory_limit != undefined && !valid_memory.test(memory_limit)}
+            <p style="color:red; font-size: 16px">Введіть тільки число у мегабайтах, яке не більше 256</p>
             {/if}
             <button on:click={save}>Зберегти зміни</button>
         </div>

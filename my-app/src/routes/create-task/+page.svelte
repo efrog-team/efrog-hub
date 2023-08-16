@@ -1,14 +1,15 @@
 <script>
-  import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation';
+    import { message } from '$lib/message.js';
   export let data;
   let name
   let id = data.id
   async function create_task () {
     if (id == undefined) {
-      console.log("Доступно тільки для зареєстрованих користувачів")
+      message("Доступно тільки для зареєстрованих користувачів", false);
       return 1;
     }
-    const response = await fetch('/api/create-task1', {
+    const response = await fetch('/api/create-task', {
             method: 'POST',
             body: JSON.stringify({id, name}),
         });

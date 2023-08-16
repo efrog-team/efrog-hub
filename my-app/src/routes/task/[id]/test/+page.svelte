@@ -1,4 +1,5 @@
 <script>
+    import  {message} from '$lib/message.js'
     export let data;
     let id = data.task_id;
     let test = data.query;
@@ -11,7 +12,11 @@
         });
 
         const answ = await res.json();
-        console.log(answ)
+        if (answ == "Зміни збережені"){
+            message(answ, true);
+            return;
+        }
+        message(answ, false);
     }
 
     function create_test() {
@@ -24,7 +29,6 @@
         }
         test = test;
         }
-        console.log(test);
     }
 </script>
 

@@ -1,4 +1,5 @@
 <script>
+    import  {message} from '$lib/message.js'
     export let data;
     let task_id = data.task_id;
     async function create_file () {
@@ -34,8 +35,12 @@
             body: formData,
         });
 
-        const answer = await response.json();
-        alert (answer);
+        const answ = await response.json();
+        if (answ == "Задача успішно завантажена"){
+            message(answ, true);
+            return;
+        }
+        message(answ, false);
   }
 </script>
 

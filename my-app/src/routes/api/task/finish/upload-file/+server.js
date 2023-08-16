@@ -67,7 +67,7 @@ export async function POST( {request, cookies} ) {
 
     if(!fs.existsSync(main_path + 'statement/statement.tex')){
         clear_dir (main_path);
-        return json("File statement.txt does not exist");
+        return json("File statement.tex does not exist");
     }
 
     // перевіряємо директорію examples на перелік обов'язкових файлів
@@ -103,6 +103,20 @@ export async function POST( {request, cookies} ) {
     name = fs.readFileSync(main_path + 'general_info/name.txt', 'utf-8');
     time_limit = fs.readFileSync(main_path + 'general_info/time_limit.txt' , 'utf-8');
     memory_limit = fs.readFileSync(main_path + 'general_info/memory_limit.txt', 'utf-8');
+
+
+    const valid_time = new RegExp(/^(10|[1-9](\.\d+)?)$/);
+    const valid_memory= new RegExp(/^(1|2(?:[0-4]\d|5[0-6])|\d{1,2})(\.\d+)?$/);
+
+    if(!valid_time.test(time_limit)){
+        clear_dir (main_path);
+        return json("Час це число у секундх не більше 10");
+    }
+
+    if(!valid_memory.test(memory_limit)){
+        clear_dir (main_path);
+        return json("Пам'ять це число у мегабайтах, не більше 256");
+    }
 
     statement = fs.readFileSync(main_path + 'statement/statement.tex', 'utf-8');
 
@@ -155,7 +169,7 @@ export async function POST( {request, cookies} ) {
     }
     clear_dir (main_path);
 
-    await db.send(`UPDATE task SET name = '${name}', time_limit = '${time_limit}', memory_limit = '${memory_limit}', statement = '${statement}', input_statement = '${input_statement}', output_statement = '${output_statement}', note = '${note}' WHERE id = ${task_id};`);
+    await db.send_ecran(`UPDATE task SET name = ?, time_limit = ?, memory_limit = ?, statement = ?, input_statement = ?, output_statement = ?, note = ? WHERE id = ?;`, [name, time_limit, memory_limit, statement, input_statement, output_statement, note, task_id]);
     await db.send(`DELETE FROM test WHERE task_id = ${task_id};`)
     for(let i = 0; i < test.length; i++){
         await db.send(`INSERT INTO test (task_id, test_id, input, output, status) VALUES ('${task_id}', '${test[i].test_id}', '${test[i].input}', '${test[i].output}', '${test[i].status}')`)

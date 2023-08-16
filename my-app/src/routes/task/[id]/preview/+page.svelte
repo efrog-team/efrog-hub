@@ -21,15 +21,18 @@
             <p>Ліміт часу: {data.task.time_limit} с</p>
             <p>Ліміт пам'яті: {data.task.memory_limit} MB</p>
             <br>
-      
-            <p>Умова</p>
-            {#each data.task.statement.split('$$') as fragment, index}
-                {#if index % 2 === 0}
-                    <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                {:else}
-                    <p class="text">{@html generate_formula(fragment)}</p>
-                {/if}
-            {/each}
+            
+            {#if data.task.statement}
+                <p>Умова</p>
+                {#each data.task.statement.split('$$') as fragment, index}
+                    {#if index % 2 === 0}
+                        <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
+                    {:else}
+                        <p class="text">{@html generate_formula(fragment)}</p>
+                    {/if}
+                {/each}
+            {/if}
+
       
             {#if data.task.input_statement}
                 <p>Вхідні дані</p>
@@ -63,7 +66,8 @@
                     {/if}
                 {/each}
             {/if}
-      
+            
+            
             <p>Приклади</p>
 
             {#each data.test as test, i}
