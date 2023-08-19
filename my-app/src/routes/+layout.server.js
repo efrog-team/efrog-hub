@@ -14,7 +14,7 @@ export async function load({ cookies }) {
     } catch (e) {
         if (e instanceof jwt.TokenExpiredError) {
             cookies.delete("token");
-            return redirect('/authorization/login');
+            throw redirect('/authorization/login');
         }
     }
 }
