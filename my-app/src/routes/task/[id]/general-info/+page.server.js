@@ -1,30 +1,15 @@
-import * as jwt from 'jsonwebtoken';
-import  {config} from '$lib/server/config';
-import {authorization} from '$lib/server/check.js'
-import { redirect } from '@sveltejs/kit';
 import * as db from '$lib/database/database'
 
 /** @type {import('./$types').LayoutServerLoad} */
 export async function load({ cookies, params }) {
-    // Перевірка чи зареєстрований користувач
-    const token = cookies.get('token');
-    if (!token){
-        throw redirect(300, "/access-denied")
-    }
-    // Перевірка чи має користувач права на редагування задачі
-    let user_info = jwt.verify(token, config.secret);
-    let task_id = params.id
-    let user_id = user_info.id
-    const verdict = await authorization(task_id, user_id)
-    if(!verdict){
-        throw redirect(300, "/access-denied")
-    }
+    const user_id = cookies.get('userId');
+    const task_id = params.id;
     // Отримання даних задачі з бази даних
-    const query = await db.send(`SELECT name, time_limit, memory_limit FROM task WHERE id = '${task_id}'`)
-    let author = await db.send(`SELECT user_id, status FROM author WHERE task_id = '${task_id}'`)
+    const query = await db.send(`SELECT name, time_limit, memory_limit FROM task WHERE id = '${task_id}'`);
+    let author = await db.send(`SELECT user_id, status FROM author WHERE task_id = '${task_id}'`);
     for(let i = 0; i < author.length; i++){
-        const author_name = await db.send(`SELECT login FROM user WHERE id = '${author[i].user_id}'`)
-        author[i] = {...author[i], ...author_name[0]}
+        const author_name = await db.send(`SELECT login FROM user WHERE id = '${author[i].user_id}'`);
+        author[i] = {...author[i], ...author_name[0]};
     }
     return {task_id, query, author};
 }

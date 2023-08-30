@@ -9,3 +9,16 @@ export let authorization = async (task_id, user_id) => {
     }
     return false;
 }
+
+
+export let randomString = () => {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let randomString = "";
+  
+    for (let i = 0; i < 10; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      randomString += charset.charAt(randomIndex);
+    }
+
+    return randomString;
+}

@@ -9,10 +9,9 @@ export async function load({ cookies}) {
     // Перевірка чи зареєстрований користувач та якщо зареєстрований отримання токену
     const token = cookies.get('token');
     if (!token){
-        throw redirect(300, "/access-denied")
+        throw redirect(307, "/access-denied")
     }
-    let user_info = jwt.verify(token, config.secret);
-    let user_id = user_info.id
+    const user_id = cookies.get('userId');
     // Отримання даних  про задачі які може редагувати користувач з бази даних
     let query = await db.send(`SELECT task_id, status FROM author WHERE user_id = '${user_id}'`)
     for(let i = 0; i < query.length; i++){
