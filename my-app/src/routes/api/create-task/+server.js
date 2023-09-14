@@ -1,13 +1,26 @@
 import { json } from '@sveltejs/kit';
-
-
 import * as db from '$lib/database/database'
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
-    const {id, name} = await request.json();
-    const answ = await db.send(`INSERT INTO task (auth_id, name) VALUES ('${id}', '${name}');`);
-    const task_id = answ.insertId;
-    await db.send(`INSERT INTO author (task_id, user_id, status) VALUES ('${task_id}', '${id}', 'author');`);
-    return json(task_id);
+    const {userId, name} = await request.json();
+
+    let taskId = await db.send_ecran(
+        `SELECT MAX(task_id) FROM task`);
+
+    taskId = Number(taskId[0]["MAX(task_id)"]) + 1;
+    
+    await db.send_ecran(
+        `INSERT INTO task 
+        (task_id, auth_id, name) 
+        VALUES (?, ?, ?)`, 
+        [taskId, userId, name]);
+
+    await db.send_ecran(
+        `INSERT INTO author 
+        (task_id, user_id, status)
+        VALUES (?, ?, ?)`, 
+        [taskId, userId, "author"]);
+
+    return json(taskId);
 }

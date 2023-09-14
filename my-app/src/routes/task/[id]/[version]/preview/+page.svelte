@@ -1,6 +1,34 @@
 <script>
     import {generate_formula} from '$lib/database/katex.js'
+    let id, name, time_limit, memory_limit, statement, input_statement, output_statement, note, test, task;
+    import { onMount } from 'svelte';
     export let data;
+
+    onMount(() => {
+        id = data.task_id
+
+        name = data.task.name;
+        time_limit = data.task.time_limit;
+        memory_limit = data.task.memory_limit;
+        statement = data.task.statement;
+        input_statement = data.task.input_statement;
+        output_statement = data.task.output_statement;
+        note = data.task.note;
+        test = data.test;
+
+        if (localStorage.getItem(id) != null){
+            task = JSON.parse(localStorage.getItem(id));
+            name = task.name;
+            time_limit = task.time_limit;
+            memory_limit = task.memory_limit;
+            statement = task.statement;
+            input_statement = task.input_statement;
+            output_statement = task.output_statement;
+            note = task.note;
+            test = task.test;
+        }
+
+    })
 </script>
 
 
@@ -14,17 +42,16 @@
 
 
   
-<main>
-    <div style="padding: 2vw;">
+<main style="display: inline-block; margin-left: 1vw;">
         <div class="container">
-            <p align="center" style="font-size: 22px;">{data.task.name}</p>
-            <p>Ліміт часу: {data.task.time_limit} с</p>
-            <p>Ліміт пам'яті: {data.task.memory_limit} MB</p>
+            <p align="center" style="font-size: 22px;">{name}</p>
+            <p>Ліміт часу: {time_limit} с</p>
+            <p>Ліміт пам'яті: {memory_limit} MB</p>
             <br>
             
-            {#if data.task.statement}
+            {#if statement}
                 <p>Умова</p>
-                {#each data.task.statement.split('$$') as fragment, index}
+                {#each statement.split('$$') as fragment, index}
                     {#if index % 2 === 0}
                         <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
                     {:else}
@@ -34,9 +61,9 @@
             {/if}
 
       
-            {#if data.task.input_statement}
+            {#if input_statement}
                 <p>Вхідні дані</p>
-                {#each data.task.input_statement.split('$$') as fragment, index}
+                {#each input_statement.split('$$') as fragment, index}
                     {#if index % 2 === 0}
                         <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
                     {:else}
@@ -45,9 +72,9 @@
                 {/each}
             {/if}
             
-            {#if data.task.output_statement}
+            {#if output_statement}
                 <p>Вихідні дані</p>
-                {#each data.task.output_statement.split('$$') as fragment, index}
+                {#each output_statement.split('$$') as fragment, index}
                   {#if index % 2 === 0}
                       <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
                   {:else}
@@ -56,9 +83,9 @@
                 {/each}
             {/if}
       
-            {#if data.task.note}
+            {#if note}
                 <p>Примітки</p>
-                    {#each data.task.note.split('$$') as fragment, index}
+                    {#each note.split('$$') as fragment, index}
                     {#if index % 2 === 0}
                        <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
                     {:else}
@@ -70,20 +97,26 @@
             
             <p>Приклади</p>
 
-            {#each data.test as test, i}
-                <p class="text">Приклад {i + 1}</p>
-                <table>
-                    <tr>
-                        <th>Вхідні дані</th>
-                        <th>Вихідні дані</th>
-                    </tr>
-                    <tr>
-                        <td>{test.input}</td>
-                        <td>{test.output}</td>
-                    </tr>
-                </table>
-            {/each}
-      </div>
+            {#if test}
+                {#each test as test, i}
+                    {#if test.status == "Opened"}
+                        <p class="text">Приклад {i + 1}</p>
+                        <table>
+                            <tr>
+                                <th>Вхідні дані</th>
+                                <th>Вихідні дані</th>
+                            </tr>
+                            <tr>
+                                <td>{test.input}</td>
+                                <td>{test.output}</td>
+                            </tr>
+                        </table>
+                    {/if}
+  
+                {/each}
+            {/if}
+
+
 </main>
 
 <style>
@@ -98,15 +131,16 @@
   }
   .container{
     background-color: #313030;
-    width: 90vw;
-    margin: auto;
+    width: 71vw;
+    margin: 0;
     padding-left: 1vw;
     padding-right: 1vw;
     padding-top: 1px;
     padding-bottom: 1px;
+    border-radius: 5px;
   }
   table{
-      width: 90vw;
+      width: 71vw;
       background-color: #555454;
       margin-top: 5px;
       margin-bottom: 15px;
@@ -114,13 +148,16 @@
       color: white;
       font-family: "e-Ukraine";
       text-align: center;
+      border-radius: 5px;
   }
   th{
       background-color: #333333;
       height: 35px;
+      border-radius: 5px;
   }
   td{
       background-color: #333333;
       height: 30px;
+      border-radius: 5px;
   }
 </style>

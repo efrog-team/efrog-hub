@@ -17,6 +17,21 @@ function clear_dir (main_path) {
         console.error(err); 
       });
 }
+function check(value, min, max) {
+    const regex = /^(\d+(\.\d*)?|\.\d+)$/;
+
+    if (!regex.test(value)) {
+    return false; 
+    }
+
+    const numericValue = parseFloat(value);
+
+    if (!isNaN(numericValue) && numericValue >= min && numericValue <= max) {
+        return true; 
+    }
+
+    return false; 
+}
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST( {request, cookies} ) {
@@ -105,18 +120,13 @@ export async function POST( {request, cookies} ) {
     memory_limit = fs.readFileSync(main_path + 'general_info/memory_limit.txt', 'utf-8');
 
 
-    const valid_time = new RegExp(/^(10|[1-9](\.\d+)?)$/);
-    const valid_memory= new RegExp(/^(1|2(?:[0-4]\d|5[0-6])|\d{1,2})(\.\d+)?$/);
-
-    if(!valid_time.test(time_limit)){
-        clear_dir (main_path);
-        return json("Час це число у секундх не більше 10");
+    if(!check(time_limit, 1, 10)){
+        return json("Час має бути між 1 да 10 секундами");
+    }
+    if(!check(memory_limit, 4, 1024)){
+        return json("Пам'ять має бути між 4 да 1024 МБ");
     }
 
-    if(!valid_memory.test(memory_limit)){
-        clear_dir (main_path);
-        return json("Пам'ять це число у мегабайтах, не більше 256");
-    }
 
     statement = fs.readFileSync(main_path + 'statement/statement.tex', 'utf-8');
 
@@ -169,11 +179,11 @@ export async function POST( {request, cookies} ) {
     }
     clear_dir (main_path);
 
-    await db.send_ecran(`UPDATE task SET name = ?, time_limit = ?, memory_limit = ?, statement = ?, input_statement = ?, output_statement = ?, note = ? WHERE id = ?;`, [name, time_limit, memory_limit, statement, input_statement, output_statement, note, task_id]);
-    await db.send(`DELETE FROM test WHERE task_id = ${task_id};`)
-    for(let i = 0; i < test.length; i++){
-        await db.send(`INSERT INTO test (task_id, test_id, input, output, status) VALUES ('${task_id}', '${test[i].test_id}', '${test[i].input}', '${test[i].output}', '${test[i].status}')`)
-    }
+    // await db.send_ecran(`UPDATE task SET name = ?, time_limit = ?, memory_limit = ?, statement = ?, input_statement = ?, output_statement = ?, note = ? WHERE id = ?;`, [name, time_limit, memory_limit, statement, input_statement, output_statement, note, task_id]);
+    // await db.send(`DELETE FROM test WHERE task_id = ${task_id};`)
+    // for(let i = 0; i < test.length; i++){
+    //     await db.send(`INSERT INTO test (task_id, test_id, input, output, status) VALUES ('${task_id}', '${test[i].test_id}', '${test[i].input}', '${test[i].output}', '${test[i].status}')`)
+    // }
 
-    return json("Задача успішно завантажена");
+    return json({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test});
 }

@@ -3,8 +3,7 @@ import * as db from '$lib/database/database'
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request}) {
-    const { author, id} = await request.json();
-    const task_id = id;
+    const { author, task_id} = await request.json();
     const candidate_id = await db.send(`SELECT id FROM user WHERE login = BINARY '${author}'`)
     if (candidate_id.length == 0) {
         return json("Такого логіна не існує")
@@ -16,6 +15,6 @@ export async function POST({ request}) {
         }
     }
     await db.send(`INSERT INTO author (task_id, user_id, status) VALUES ('${task_id}', '${candidate_id[0].id}', 'co-author');`)
-    return json(exist_author);
+    return json("Автора додано");
 }
 

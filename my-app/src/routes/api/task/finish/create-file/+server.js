@@ -6,10 +6,10 @@ import AdmZip from 'adm-zip';
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request, cookies }) {
     const curent_sesion = cookies.get('token');
-    const {task_id} = await request.json();
+    const {task_id, version} = await request.json();
 
     const test = await db.send(`SELECT test_id, input, output, status FROM test WHERE task_id = '${task_id}'`);
-    const query = await db.send_ecran(`SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note FROM task WHERE id = ?`, [task_id]);
+    const query = await db.send_ecran(`SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note FROM task WHERE task_id = ? AND version = ?`, [task_id, version]);
     const {name, time_limit, memory_limit, statement, input_statement, output_statement, note} = query[0];
 
     fs.mkdirSync("./static/public/"+ curent_sesion);

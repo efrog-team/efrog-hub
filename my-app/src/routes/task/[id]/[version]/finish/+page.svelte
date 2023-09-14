@@ -2,10 +2,11 @@
     import  {message} from '$lib/message.js'
     export let data;
     let task_id = data.task_id;
+    let version = data.version.length - 1
     async function create_file () {
         const response = await fetch('/api/task/finish/create-file', {
             method: 'POST',
-            body: JSON.stringify({task_id}),
+            body: JSON.stringify({task_id, version}),
         });
 
         const url = await response.json();
@@ -35,12 +36,14 @@
             body: formData,
         });
 
-        const answ = await response.json();
-        if (answ == "Задача успішно завантажена"){
-            message(answ, true);
+        const task = await response.json();
+
+        if (typeof task === "string"){
+            message(task, false);
             return;
         }
-        message(answ, false);
+        message("Задача успішно завантажена", true);
+        localStorage.setItem(task_id, JSON.stringify(task));
   }
 </script>
 
@@ -60,14 +63,14 @@
         display:flex;
     }
     .submit_button{
-        width: 44vw;
+        outline: none;
+        border: none;
+        width: 34vw;
         height: 60px;
         background-color: #28743b;
-        border: 4px solid #28743b;
-        margin-right: 4vw;
+        border-radius: 5px;
         margin-top: 15px;
-        display:inline;
-        float: left;
+        display:inline-block;
         color: white;
         font-size: 22px;
         font-family: "e-Ukraine";
@@ -80,10 +83,12 @@
     <title>Create task</title>
 </svelte:head>
 
-<main>
-    <div style="padding: 2vw;">
-        <button on:click={create_file} class="submit_button">Завантажити файл</button>
+<main style="display: inline-block; margin-left: 2vw;">
+    <div style="display: inline-block">
+        <button on:click={create_file} class="submit_button" style="margin-right: 4vw">Завантажити файл</button>
         <input type="file" style="display: none;" name ="upload_file" on:change={upload_file}>
-        <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button" style="padding-bottom: 0; margin-right: 0; margin-bottom:0; float:right">Підвантажити файл</button>
+        <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button" >Підвантажити файл</button>
     </div>
+
+
 </main>

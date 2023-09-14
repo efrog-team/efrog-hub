@@ -4,6 +4,35 @@
 
 </script>
 
+
+<svelte:head>
+    <title>Create task</title>
+</svelte:head>
+
+<main>
+    <div style="padding: 2vw;">
+        <p>Мої завдання</p>
+        <table>
+            <tr>
+                <th>ID задачі</th>
+                <th>Назва задачі</th>
+                <th>Авторство</th>
+                <th>Дії</th>
+            </tr>
+            {#each task as task}
+                <tr>
+                    <td>{task.task_id}</td>
+                    <td>{task.name}</td>
+                    <td>{task.status}</td>
+                    <td><a href="task/{task.task_id}/{task.version}/general-info">Редагувати</a></td>
+                </tr>
+            {/each}
+        </table>
+
+    </div>
+</main>
+
+
 <style>
     p{
        color:white;
@@ -37,30 +66,3 @@
     height: 30px;
    }
 </style>
-
-<svelte:head>
-    <title>Create task</title>
-</svelte:head>
-
-<main>
-    <div style="padding: 2vw;">
-        <p>Мої завдання</p>
-        <table>
-            <tr>
-                <th>ID задачі</th>
-                <th>Назва задачі</th>
-                <th>Авторство</th>
-                <th>Дії</th>
-            </tr>
-            {#each task as task}
-                <tr>
-                    <td>{task.task_id}</td>
-                    <td>{task.name}</td>
-                    <td>{task.status}</td>
-                    <td><a href="task/{task.task_id}/general-info">Редагувати</a></td>
-                </tr>
-            {/each}
-        </table>
-
-    </div>
-</main>

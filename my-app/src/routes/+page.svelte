@@ -1,7 +1,15 @@
 <script>
-import {message} from '$lib/message'
+  let inputValue = '';
+  
+  function saveData() {
+    localStorage.setItem('dataKey', inputValue);
+  }
+  
+  function loadData() {
+    inputValue = localStorage.getItem('dataKey') || '';
+  }
 </script>
 
-<main>
-  <button on:click={() => message("Hello, world!", false)}>message</button>
-</main>
+<input bind:value={inputValue} />
+<button on:click={saveData}>Сохранить данные</button>
+<button on:click={loadData}>Загрузить данные</button>
