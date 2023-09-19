@@ -56,9 +56,18 @@ export async function POST({ request }) {
         FROM test 
         WHERE task_id = ? AND version = ?`, 
         [taskId, version]);
-    
-
     task = task[0];
+
+    for (let i = 0; i < test.length; i++){
+        
+        if(test[i].status === "Opened"){
+            test[i].status = true;
+        }
+        else{
+            test[i].status = false;
+        }
+    }
+    
 
     return json({task, test});
 }
