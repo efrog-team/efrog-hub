@@ -3,7 +3,6 @@
     import { onMount } from 'svelte';
     export let data;
     let id, test, test_amount, task;
-
     onMount(() => {
         id = data.task_id;
         test = data.test

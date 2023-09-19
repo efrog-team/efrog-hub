@@ -1,7 +1,8 @@
 import { serverUrl } from "$lib/server/config.js";
-import { request } from "$lib/server/main.js";
+import { getClientrId, request } from "$lib/server/main.js";
 import { redirect } from "@sveltejs/kit";
 import * as db from '$lib/database/database'
+
 
 export async function load({cookies, url}) {
     if(url.searchParams.get("state") != cookies.get("state")){
@@ -13,12 +14,18 @@ export async function load({cookies, url}) {
 
     cookies.set("token", token, {path: "/"});
 
-    const userInfo = await request("GET", serverUrl + "/users/me", { Authorization: token });
+    // const userInfo = await request("GET", serverUrl + "/users/me", { Authorization: token });
     
-    let userId =  await db.send_ecran("SELECT id FROM user WHERE login = ?", [userInfo.username]);
-    userId = userId[0].id
+    // let  userId  = await fetch(`${serverUrl}/users/me/id`,
+    // {method: 'GET',
+    // headers:
+    //     {Authorization: token}
+    // });
     
-    cookies.set("userId", userId, {path: "/"});
-    cookies.set("user", userInfo.username, {path: "/"})    
+    // userId = await userId.json();
+    // console.log(userId)
+    
+    cookies.set("userId", 1, {path: "/"});
+    cookies.set("user", "admin", {path: "/"})    
     throw redirect(307, "/my-task");
 }

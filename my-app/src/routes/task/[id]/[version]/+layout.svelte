@@ -97,8 +97,7 @@
             </summary>
                 {#each data.author as author}
                     <p>{author.login}: {author.status}</p> 
-                {/each}
-
+                {/each} 
         </details>
 
         <input type="text" class="task_input" bind:value={author}>

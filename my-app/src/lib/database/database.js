@@ -4,8 +4,9 @@ import mysql from 'mysql2';
 const pool = mysql.createPool({
     host: "localhost",
     user: "root",
-    database: "my-project",
+    database: "db",
     password: "root",
+    port: 5917,
 });
 
 // Функція на редагування бази даних
