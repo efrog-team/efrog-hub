@@ -31,8 +31,8 @@ export async function load({ params }) {
         FROM author 
         WHERE task_id = ?`, 
         [task_id]);
-    
-    author = [{login: "admin", status: "author"}]
+
+    author = await getTaskAuthors(author);
 
     return { task_id, task, test, version, author };
 }

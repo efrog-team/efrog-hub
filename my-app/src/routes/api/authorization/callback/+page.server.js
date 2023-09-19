@@ -1,7 +1,5 @@
-import { serverUrl } from "$lib/server/config.js";
-import { getClientrId, request } from "$lib/server/main.js";
+import { getClientrId, getClientrInfo } from "$lib/server/main.js";
 import { redirect } from "@sveltejs/kit";
-import * as db from '$lib/database/database'
 
 
 export async function load({cookies, url}) {
@@ -11,21 +9,18 @@ export async function load({cookies, url}) {
     cookies.delete("state", {path: "/"});
 
     const token = url.searchParams.get("code") || ""; // hardcode
-
     cookies.set("token", token, {path: "/"});
 
-    // const userInfo = await request("GET", serverUrl + "/users/me", { Authorization: token });
-    
-    // let  userId  = await fetch(`${serverUrl}/users/me/id`,
-    // {method: 'GET',
-    // headers:
-    //     {Authorization: token}
-    // });
-    
-    // userId = await userId.json();
-    // console.log(userId)
-    
-    cookies.set("userId", 1, {path: "/"});
-    cookies.set("user", "admin", {path: "/"})    
+    const userInfo = await getClientrInfo(token);
+    const userId = await getClientrId(token);
+
+    if(!userId){
+        throw redirect(307, "/");
+    }
+    if(!userInfo){
+        throw redirect(307, "/");
+    }
+    cookies.set("userId", userId, {path: "/"});
+    cookies.set("user", userInfo.username, {path: "/"})    
     throw redirect(307, "/my-task");
 }
