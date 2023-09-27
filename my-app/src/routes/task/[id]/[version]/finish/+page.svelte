@@ -45,6 +45,27 @@
         message("Задача успішно завантажена", true);
         localStorage.setItem(task_id, JSON.stringify(task));
   }
+
+
+  async function upload_file_ejudge(event) {
+        const file = event.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await fetch('/api/task/finish/upload-file-ejudge', {
+            method: 'POST',
+            body: formData,
+        });
+        if(response.ok){
+          const task = await response.json();
+          message("Задача успішно завантажена", true);
+          localStorage.setItem(task_id, JSON.stringify(task))
+          return;
+        }
+
+        console.log(response)
+
+      }
 </script>
 
 <style>
@@ -65,7 +86,7 @@
     .submit_button{
         outline: none;
         border: none;
-        width: 34vw;
+        width: 20vw;
         height: 60px;
         background-color: #28743b;
         border-radius: 5px;
@@ -83,12 +104,15 @@
     <title>Create task</title>
 </svelte:head>
 
-<main style="display: inline-block; margin-left: 2vw;">
+<main style="display: inline-block; margin-left: 2vw; max-width: max-content">
     <div style="display: inline-block">
         <button on:click={create_file} class="submit_button" style="margin-right: 4vw">Завантажити файл</button>
         <input type="file" style="display: none;" name ="upload_file" on:change={upload_file}>
-        <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button" >Підвантажити файл</button>
+        <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button" style="margin-right: 4vw">Підвантажити файл</button>
+
+        <input type="file" style="display: none;" name ="upload_file_ejudge" on:change={upload_file_ejudge}>
+        <button on:click={() => document.querySelector("input[name=upload_file_ejudge]").click()} class="submit_button" >Підвантажити файл ejudge</button>
     </div>
 
-
+   
 </main>

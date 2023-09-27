@@ -18,7 +18,18 @@
                 test_amount = test.length;
             }
         }
+
+        const textareas = document.querySelectorAll('.test_area');
+        textareas.forEach(textarea => {
+            resize({ target: textarea });
+        });
     });
+
+    function resize(_e) {
+        const element = _e.target || _e.srcElement;
+        element.style.height = "auto";
+        element.style.height = `${element.scrollHeight}px`;
+    }
 
     async function save () {
         if(test == task.test){
@@ -71,8 +82,8 @@
                 {#each test as test}
                     <tr>
                         <td>{test.test_id}</td>
-                        <td><textarea name="input_value" id="input_value" class="test_area"  bind:value={test.input}></textarea></td>
-                        <td><textarea name="outnput_value" id="outnput_value"  class="test_area" bind:value={test.output}></textarea></td>
+                        <td><textarea name="input_value" id="input_value" class="test_area"  bind:value={test.input} on:input={resize}></textarea></td>
+                        <td><textarea name="outnput_value" id="outnput_value"  class="test_area" bind:value={test.output} on:input={resize}></textarea></td>
                         <td>
                             <select class="select" bind:value={test.status}>
                                 <option value="Opened">Opened</option>

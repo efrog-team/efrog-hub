@@ -1,4 +1,4 @@
-import katex from 'katex'
+import katex from 'katex';
 export let generate_formula = (text) => {
     let generated;
     try{
