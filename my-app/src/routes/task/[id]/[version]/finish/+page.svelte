@@ -66,6 +66,26 @@
         console.log(response)
 
       }
+
+      async function upload_file_ejudge_alternative(event) {
+                const file = event.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await fetch('/api/task/finish/upload-file-ejudge-alternative', {
+            method: 'POST',
+            body: formData,
+        });
+        if(response.ok){
+          const task = await response.json();
+          message("Задача успішно завантажена", true);
+          localStorage.setItem(task_id, JSON.stringify(task))
+          return;
+        }
+
+        console.log(response)
+
+        }
 </script>
 
 <style>
@@ -86,7 +106,7 @@
     .submit_button{
         outline: none;
         border: none;
-        width: 20vw;
+        width: 32vw;
         height: 60px;
         background-color: #28743b;
         border-radius: 5px;
@@ -109,9 +129,12 @@
         <button on:click={create_file} class="submit_button" style="margin-right: 4vw">Завантажити файл</button>
         <input type="file" style="display: none;" name ="upload_file" on:change={upload_file}>
         <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button" style="margin-right: 4vw">Підвантажити файл</button>
-
+<br>
         <input type="file" style="display: none;" name ="upload_file_ejudge" on:change={upload_file_ejudge}>
-        <button on:click={() => document.querySelector("input[name=upload_file_ejudge]").click()} class="submit_button" >Підвантажити файл ejudge</button>
+        <button on:click={() => document.querySelector("input[name=upload_file_ejudge]").click()} class="submit_button" style="margin-right: 4vw">Підвантажити файл ejudge</button>
+
+        <input type="file" style="display: none;" name ="upload_file_ejudge_alternative" on:change={upload_file_ejudge_alternative}>
+        <button on:click={() => document.querySelector("input[name=upload_file_ejudge_alternative]").click()} class="submit_button" >Підвантажити файл ejudge альтернативне</button>
     </div>
 
    

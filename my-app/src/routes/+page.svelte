@@ -5,7 +5,7 @@
 
         const formData = new FormData();
         formData.append('file', file);
-        const response = await fetch('/api/task/finish/upload-file-ejudge', {
+        const response = await fetch('/api/task/finish/upload-file-ejudge-alternative', {
             method: 'POST',
             body: formData,
         });

@@ -2,7 +2,6 @@ import { json } from '@sveltejs/kit';
 import fs from 'fs';
 import AdmZip from 'adm-zip';
 import xml2js from 'xml2js';
-import * as db from '$lib/database/database'
 
 let name = "";
 let time_limit = "";
@@ -63,26 +62,29 @@ export async function POST( {request, cookies} ) {
 
     let contest_path = main_path + contests[0] + "/";
 
+
+    const taskName = "A"
     // перевіряємо директорію контесту на перелік обов'язкових директорій
-    if (!fs.existsSync(contest_path + 'statements')){
+    if (!fs.existsSync(contest_path + taskName)){
         clear_dir (main_path);
-        return json({ error: "Directory statements does not exist" }, { status: 404 });
+        return json({ error: `Directory ${taskName} does not exist` }, { status: 404 });
     }
 
-    if (!fs.existsSync(contest_path + 'checkers')){
+
+    if (!fs.existsSync(contest_path + taskName + "/" +'tests')){
         clear_dir (main_path);
-        return json({ error: "Directory checkers does not exist" }, { status: 404 });
+        return json({ error: `Directory ${taskName}/tests does not exist` }, { status: 404 });
     }
 
-    if (!fs.existsSync(contest_path + 'tests')){
+    if (!fs.existsSync(contest_path + taskName + "/" +'statement.xml')){
         clear_dir (main_path);
-        return json({ error: "Directory tests does not exist" }, { status: 404 });
+        return json({ error: `File ${taskName}/statement.xml does not exist` }, { status: 404 });
     }
 
-     const taskName = "A"
-    // Записуємо дані з файлу A.xml
+  
+    // Записуємо дані з файлу statement.xml
     const readFilePromise = new Promise((resolve, reject) => {
-        fs.readFile(contest_path + "statements" + "/" + taskName + ".xml", "utf-8", (err, data) => {
+        fs.readFile(contest_path + "/" + taskName + "/" + "statement.xml", "utf-8", (err, data) => {
             if (err) {
                 reject(err);
             } else {
@@ -124,19 +126,19 @@ export async function POST( {request, cookies} ) {
             test.push({test_id: test.length + 1, input: examples[i].input[0], output: examples[i].output[0], status: "Opened"});
         }
 
-        const userTests = fs.readdirSync(contest_path + 'tests' + "/" + taskName);
+        const userTests = fs.readdirSync(contest_path  + taskName + "/" + 'tests' );
         
         for(let i = 0; i < userTests.length; i ++){
 
             if(userTests[i].split(".")[1] == "answ"){
-                const ouput_format = fs.readFileSync(contest_path + 'tests' + "/" + taskName + "/" + userTests[i], 'utf-8');
+                const ouput_format = fs.readFileSync(contest_path + taskName + "/" + 'tests' + "/"  + userTests[i], 'utf-8');
 
-                if (!fs.existsSync(contest_path + 'tests' + "/" + taskName + "/" + userTests[i].split(".")[0] + ".dat")){
+                if (!fs.existsSync(contest_path + taskName + "/" + 'tests' + "/" + userTests[i].split(".")[0] + ".dat")){
                     clear_dir (main_path);
                     return json({ error: `There is ${userTests[i]}, but no ${userTests[i].split(".")[0] + ".dat"}`  }, { status: 404 });
                 }
 
-                const input_format = fs.readFileSync(contest_path + 'tests' + "/" + taskName + "/" + userTests[i].split(".")[0] + ".dat", 'utf-8');
+                const input_format = fs.readFileSync(contest_path + taskName + "/" + 'tests' + "/" + userTests[i].split(".")[0] + ".dat", 'utf-8');
 
                 test.push({ test_id: test.length + 1, input: input_format, output: ouput_format, status: "Closed" });
             }
