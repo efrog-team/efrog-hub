@@ -11,7 +11,10 @@ export async function POST({ request, cookies }) {
     const test = await db.send(`SELECT test_id, input, output, status FROM test WHERE task_id = '${task_id}'`);
     const query = await db.send_ecran(`SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note FROM task WHERE task_id = ? AND version = ?`, [task_id, version]);
     const {name, time_limit, memory_limit, statement, input_statement, output_statement, note} = query[0];
-
+    
+    if (fs.existsSync("./static/download/"+ curent_sesion)){
+        clear_dir ("./static/download/"+ curent_sesion);
+    }
     fs.mkdirSync("./static/public/"+ curent_sesion);
 
     let main_path = "./static/public/"+ curent_sesion + "/";

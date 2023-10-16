@@ -44,9 +44,14 @@ export async function POST( {request, cookies} ) {
 
     const formData = await request.formData();
     const file = formData.get('file');
+    const taskName = formData.get('taskName');
     const curent_sesion = cookies.get("token");
     test = [];
 
+    
+    if (fs.existsSync("./static/download/"+ curent_sesion)){
+        clear_dir ("./static/download/"+ curent_sesion);
+    }
     fs.mkdirSync("./static/download/"+ curent_sesion);
 
     let targetFilePath = "./static/download/" + curent_sesion + "/" + file.name;
@@ -63,7 +68,6 @@ export async function POST( {request, cookies} ) {
     let contest_path = main_path + contests[0] + "/";
 
 
-    const taskName = "A"
     // перевіряємо директорію контесту на перелік обов'язкових директорій
     if (!fs.existsSync(contest_path + taskName)){
         clear_dir (main_path);

@@ -41,6 +41,11 @@ export async function POST( {request, cookies} ) {
     const task_id =  formData.get('task_id')
     const curent_sesion = cookies.get("token")
     test = [];
+
+    if (fs.existsSync("./static/download/"+ curent_sesion)){
+        clear_dir ("./static/download/"+ curent_sesion);
+    }
+    
     fs.mkdirSync("./static/download/"+ curent_sesion);
 
     let targetFilePath = "./static/download/" + curent_sesion + "/" + file.name;
@@ -179,11 +184,6 @@ export async function POST( {request, cookies} ) {
     }
     clear_dir (main_path);
 
-    // await db.send_ecran(`UPDATE task SET name = ?, time_limit = ?, memory_limit = ?, statement = ?, input_statement = ?, output_statement = ?, note = ? WHERE id = ?;`, [name, time_limit, memory_limit, statement, input_statement, output_statement, note, task_id]);
-    // await db.send(`DELETE FROM test WHERE task_id = ${task_id};`)
-    // for(let i = 0; i < test.length; i++){
-    //     await db.send(`INSERT INTO test (task_id, test_id, input, output, status) VALUES ('${task_id}', '${test[i].test_id}', '${test[i].input}', '${test[i].output}', '${test[i].status}')`)
-    // }
 
     return json({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test});
 }

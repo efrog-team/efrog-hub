@@ -45,8 +45,13 @@ export async function POST( {request, cookies} ) {
 
     const formData = await request.formData();
     const file = formData.get('file');
+    const taskName = formData.get('taskName');
     const curent_sesion = cookies.get("token");
     test = [];
+
+    if (fs.existsSync("./static/download/"+ curent_sesion)){
+        clear_dir ("./static/download/"+ curent_sesion);
+    }
 
     fs.mkdirSync("./static/download/"+ curent_sesion);
 
@@ -79,7 +84,10 @@ export async function POST( {request, cookies} ) {
         return json({ error: "Directory tests does not exist" }, { status: 404 });
     }
 
-     const taskName = "A"
+    if (!fs.existsSync(contest_path + `statements/${taskName}.xml`)){
+        clear_dir (main_path);
+        return json({ error: `File ${taskName}.xml does not exist` }, { status: 404 });
+    }
     // Записуємо дані з файлу A.xml
     const readFilePromise = new Promise((resolve, reject) => {
         fs.readFile(contest_path + "statements" + "/" + taskName + ".xml", "utf-8", (err, data) => {
