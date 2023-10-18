@@ -132,45 +132,56 @@
   </svelte:head>
 
 
-  <main style="display: inline-block; margin-left: 1vw;">
-    <p>Умова</p>
-    <div
-      class="statement"
-      id="statement"
-      contenteditable
-      on:input={hilightText}>
-      {@html statement}
+  <main class="col-md-12 col-lg-9">
+    <div class="row">
+      <div class="col-12">
+
+      </div>
+      <div class="col-12">
+        <p>Умова</p>
+        <div
+          class="statement"
+          id="statement"
+          contenteditable
+          on:input={hilightText}>
+          {@html statement}
+        </div>
+      </div>
+      <div class="col-12">
+        <p>Умова до вхідних даних</p>
+        <div
+        class="statement"
+          id="input_statement"
+          contenteditable
+          on:input={hilightText} >
+          {@html input_statement}
+        </div>
+      </div>
+      <div class="col-12">
+        <p>Умова до вихідних даних</p>
+        <div
+          class="statement"
+          id="output_statement"
+          contenteditable
+          on:input={hilightText}>
+          {@html output_statement}
+        </div>
+      </div>
+      <div class="col-12">
+        <p>Примітки</p>
+        <div
+          class="statement"
+          id="note"
+          contenteditable
+          on:input={hilightText}>
+          {@html note}
+        </div>
+      </div>
+      <div class="col-12">
+        <button on:click={save}>Зберегти зміни</button>
+      </div> 
     </div>
 
-    <p>Умова до вхідних даних</p>
-    <div
-    class="statement"
-      id="input_statement"
-      contenteditable
-      on:input={hilightText} >
-      {@html input_statement}
-    </div>
-
-    <p>Умова до вихідних даних</p>
-    <div
-      class="statement"
-      id="output_statement"
-      contenteditable
-      on:input={hilightText}>
-      {@html output_statement}
-    </div>
-
-    <p>Примітки</p>
-    <div
-      class="statement"
-      id="note"
-      contenteditable
-      on:input={hilightText}>
-      {@html note}
-    </div>
-
-
-    <button on:click={save}>Зберегти зміни</button>
 
 </main>
 
@@ -183,7 +194,7 @@
     button{
         outline: none;
         border: none;
-        width: 73.5vw;
+        width: 100%;
         height: 60px;
         background-color: #28743b;
         border-radius: 5px;
@@ -200,7 +211,7 @@
         border: none;
         background-color: #333333;
         border-radius: 5px;
-        width: 72.5vw;
+        width: 100%;
         color: white;
         font-size: 18px;
         padding: 5px;

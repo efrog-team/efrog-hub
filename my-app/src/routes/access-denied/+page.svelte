@@ -14,7 +14,7 @@
     <title>Доступ заборонено</title>
 </svelte:head>
 
-<main>
+<main style="padding: 2vw;">
         <div style="padding: 2vw;">
             <p>Доступ заборонено</p>
         </div>

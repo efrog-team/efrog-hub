@@ -22,7 +22,28 @@
 </script>
 
 <main style="padding: 2vw;">
-  <input type="file" style="display: none;" name ="upload_file"  on:change={upload_file}>
-  <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button" >Підвантажити файл</button>
+  <button>hello</button>
+
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-8">
+        1 of 2
+      </div>
+      <div class="col-4">
+        2 of 2
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1">
+        1 of 3
+      </div>
+      <div class="col-3">
+        2 of 3
+      </div>
+      <div class="col-8">
+        3 of 3
+      </div>
+    </div>
+  </div>
 </main>
 

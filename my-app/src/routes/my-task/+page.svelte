@@ -1,9 +1,7 @@
 <script>
     export let data;
-    let task = data.query
-
+    let task = data.query;
 </script>
-
 
 <svelte:head>
     <title>Create task</title>
@@ -28,27 +26,25 @@
                 </tr>
             {/each}
         </table>
-
     </div>
 </main>
 
-
 <style>
-    p{
-       color:white;
-       font-family: "e-Ukraine";
-       font-size: 22px;
-       margin: auto;
-
-   }
-   a{
-        color:white;
+    p, a {
+        color: white;
         font-family: "e-Ukraine";
-        font-size: 18px;
-        margin: auto;
         text-decoration: none;
-   }
-   table{
+    }
+
+    p {
+        font-size: 22px;
+    }
+
+    a {
+        font-size: 18px;
+    }
+
+    table {
         width: 96vw;
         background-color: #28743b;
         margin-top: 15px;
@@ -56,13 +52,44 @@
         color: white;
         font-family: "e-Ukraine";
         text-align: center;
-   }
-   th{
-    background-color: #252526;
-    height: 35px;
-   }
-   td{
-    background-color: #333333;
-    height: 30px;
-   }
+    }
+
+    th {
+        background-color: #252526;
+        height: 35px;
+    }
+
+    td {
+        background-color: #333333;
+        height: 30px;
+    }
+
+    @media (max-width: 768px) {
+        p {
+            font-size: 16px;
+            text-align: center;
+        }
+
+        a, table {
+            font-size: 16px;
+        }
+
+        th, td {
+            height: 25px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        p, a {
+            font-size: 12px;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        th, td {
+            height: 15px;
+        }
+    }
 </style>

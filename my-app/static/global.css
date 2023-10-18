@@ -1,3 +1,5 @@
+@import "../node_modules/bootstrap/dist/css/bootstrap-grid.css";
+
 @font-face {
     font-family: 'e-Ukraine';
     src: url('Fonts/e-Ukraine/e-Ukraine-Regular.eot');
@@ -10,10 +12,12 @@
     font-style: normal;
     font-display: swap;
 }
+
 body{
     padding: 0;
     margin: 0;
     background-color: #1e1e1e;
+    min-width: 375px;
 }
 
 .content{
@@ -23,27 +27,10 @@ body{
     min-height: 100vh;
 }
 
-.header{
-    background-color: #333333;
-    border-bottom: 5px solid #28743b;
-    height: 80px;
-}
 
-.menu_text{
-    color: white;
-    font-size: 20px;
-    font-family: "e-Ukraine";
-    text-align:right;
-    text-decoration: none;   
-    display: inline;
-    margin: 5px;
-}
 
-.menu_photo{
-    height: 70px;
-    display:inline-block;
-    margin:auto;
-}
+
+
 ::-webkit-scrollbar {
     width: 0;
   }

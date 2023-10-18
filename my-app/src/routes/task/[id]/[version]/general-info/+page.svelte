@@ -73,23 +73,30 @@
     <title>Create task</title>
 </svelte:head>
 
-<main style="display: inline-block; margin-left: 1vw;">
-    <div style="display: inline-block">
-        <p>Назва</p>
-        <input type="text" id="task_name" bind:value={name}>
+<main class="col-md-12 col-lg-9">
+    <div class="row">
+        <div style="display: inline-block" class="col-md-12 col-lg-4">
+            <p>Назва</p>
+            <input type="text" id="task_name" bind:value={name}>
+        </div>
+    
+        <div style="display: inline-block" class="col-md-12 col-lg-4">
+            <p>Час виконання</p>
+            <input type="text" id="time_limit" bind:value={time_limit}>
+        </div>
+    
+        <div style="display: inline-block" class="col-md-12 col-lg-4">
+            <p>Обсяг пам'яті</p>
+            <input type="text" id="memory_limit" style="margin-right: 0;" bind:value={memory_limit}>
+        </div>
     </div>
-
-    <div style="display: inline-block">
-        <p>Час виконання</p>
-        <input type="text" id="time_limit" bind:value={time_limit}>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <button on:click={save}>Зберегти зміни</button>
+        </div> 
     </div>
-
-    <div style="display: inline-block">
-        <p>Обсяг пам'яті</p>
-        <input type="text" id="memory_limit" style="margin-right: 0;" bind:value={memory_limit}>
-    </div>
-
-    <button on:click={save}>Зберегти зміни</button>
+    
 
 </main>
 
@@ -107,18 +114,17 @@
         border: none;
         background-color: #333333;
         border-radius: 5px;
-        width: 23vw;
+        width: 100%;
         height: 56px;
         margin-top: 7px;
-        margin-right: 1vw;
         margin-bottom: 20px;
     
    }
    button{
         outline: none;
         border: none;
-        width: 72.5vw;
         height: 60px;
+        width: 100%;
         background-color: #28743b;
         border-radius: 5px;
         color: white;
