@@ -42,80 +42,87 @@
 
 
   
-<main style="display: inline-block; margin-left: 1vw;">
-        <div class="container">
-            <p align="center" style="font-size: 22px;">{name}</p>
-            <p>Ліміт часу: {time_limit} с</p>
-            <p>Ліміт пам'яті: {memory_limit} MB</p>
-            <br>
-            
-            {#if statement}
-                <p>Умова</p>
-                {#each statement.split('$$') as fragment, index}
+<main class="col-md-12 col-lg-9">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="preview">
+                <p align="center" style="font-size: 22px;">{name}</p>
+                <p>Ліміт часу: {time_limit} с</p>
+                <p>Ліміт пам'яті: {memory_limit} MB</p>
+                <br>
+                
+                {#if statement}
+                    <p>Умова</p>
+                    {#each statement.split('$$') as fragment, index}
+                        {#if index % 2 === 0}
+                            <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
+                        {:else}
+                            <p class="text">{@html generate_formula(fragment)}</p>
+                        {/if}
+                    {/each}
+                {/if}
+
+        
+                {#if input_statement}
+                    <p>Вхідні дані</p>
+                    {#each input_statement.split('$$') as fragment, index}
+                        {#if index % 2 === 0}
+                            <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
+                        {:else}
+                            <p class="text">{@html generate_formula(fragment)}</p>
+                        {/if}
+                    {/each}
+                {/if}
+                
+                {#if output_statement}
+                    <p>Вихідні дані</p>
+                    {#each output_statement.split('$$') as fragment, index}
                     {#if index % 2 === 0}
                         <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
                     {:else}
                         <p class="text">{@html generate_formula(fragment)}</p>
                     {/if}
-                {/each}
-            {/if}
-
-      
-            {#if input_statement}
-                <p>Вхідні дані</p>
-                {#each input_statement.split('$$') as fragment, index}
-                    {#if index % 2 === 0}
+                    {/each}
+                {/if}
+        
+                {#if note}
+                    <p>Примітки</p>
+                        {#each note.split('$$') as fragment, index}
+                        {#if index % 2 === 0}
                         <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                    {:else}
-                        <p class="text">{@html generate_formula(fragment)}</p>
-                    {/if}
-                {/each}
-            {/if}
-            
-            {#if output_statement}
-                <p>Вихідні дані</p>
-                {#each output_statement.split('$$') as fragment, index}
-                  {#if index % 2 === 0}
-                      <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                  {:else}
-                      <p class="text">{@html generate_formula(fragment)}</p>
-                  {/if}
-                {/each}
-            {/if}
-      
-            {#if note}
-                <p>Примітки</p>
-                    {#each note.split('$$') as fragment, index}
-                    {#if index % 2 === 0}
-                       <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                    {:else}
-                        <p class="text">{@html generate_formula(fragment)}</p>
-                    {/if}
-                {/each}
-            {/if}
-            
-            
-            <p>Приклади</p>
+                        {:else}
+                            <p class="text">{@html generate_formula(fragment)}</p>
+                        {/if}
+                    {/each}
+                {/if}
+                
+                
+                <p>Приклади</p>
 
-            {#if test}
-                {#each test as test, i}
-                    {#if test.status == "Opened"}
-                        <p class="text">Приклад {i + 1}</p>
-                        <table>
-                            <tr>
-                                <th>Вхідні дані</th>
-                                <th>Вихідні дані</th>
-                            </tr>
-                            <tr>
-                                <td>{test.input}</td>
-                                <td>{test.output}</td>
-                            </tr>
-                        </table>
-                    {/if}
-  
-                {/each}
-            {/if}
+                {#if test}
+                    {#each test as test, i}
+                        {#if test.status == "Opened"}
+                            <p class="text">Приклад {i + 1}</p>
+                            <div class="col-12">
+                                <table>
+                                    <tr>
+                                        <th>Вхідні дані</th>
+                                        <th>Вихідні дані</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{test.input}</td>
+                                        <td>{test.output}</td>
+                                    </tr>
+                                </table>
+                            </div>
 
+                        {/if}
+    
+                    {/each}
+                {/if}
+            </div>
+        </div>
+    </div>
 
 </main>
 
@@ -129,9 +136,9 @@
     display: inline;
     font-size: 14px;
   }
-  .container{
+  .preview{
     background-color: #313030;
-    width: 71vw;
+    width: 100%;
     margin: 0;
     padding-left: 1vw;
     padding-right: 1vw;
@@ -139,25 +146,27 @@
     padding-bottom: 1px;
     border-radius: 5px;
   }
-  table{
-      width: 71vw;
-      background-color: #555454;
-      margin-top: 5px;
-      margin-bottom: 15px;
-      font-size: 14px;
-      color: white;
-      font-family: "e-Ukraine";
-      text-align: center;
-      border-radius: 5px;
-  }
-  th{
-      background-color: #333333;
-      height: 35px;
-      border-radius: 5px;
-  }
-  td{
-      background-color: #333333;
-      height: 30px;
-      border-radius: 5px;
-  }
+    table {
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: white;
+        font-family: "e-Ukraine";
+        text-align: center;
+        border-spacing: 2px; 
+        border-collapse: separate;
+    }
+
+    th, td {
+        /* background-color: #555454; */
+        border: 2px solid #555454;
+        border-radius: 5px;
+        height: 30px;
+    }
+    @media(max-width: 992px){
+        .preview{
+            margin-top: 15px;
+        }
+    }
 </style>

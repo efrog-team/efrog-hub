@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     export let data;
     let id, test, test_amount, task;
+    // let textareas = [];
     onMount(() => {
         id = data.task_id;
         test = data.test
@@ -18,19 +19,24 @@
                 test_amount = test.length;
             }
         }
+        // for(let i = 0; i < test.length; i++){
+        //     textareas.push(1);
 
-        const textareas = document.querySelectorAll('.test_area');
-        textareas.forEach(textarea => {
-            resize({ target: textarea });
-        });
+        // }
+        // console.log(textareas)
+
+        // textareas.forEach(textarea => {
+        //     console.log(1)
+        //     resize({ target: textarea });
+        // });
+
     });
 
-    function resize(_e) {
-        const element = _e.target || _e.srcElement;
-        element.style.height = "auto";
-        element.style.height = `${element.scrollHeight}px`;
+    function resize(event) {
+        const getElement = event.target;
+        getElement.style.height = "auto";
+        getElement.style.height = Math.max(getElement.scrollHeight, getElement.offsetHeight) + "px";
     }
-
     async function save () {
         if(test == task.test){
             message("Дані не змінилися", false);
@@ -43,17 +49,17 @@
         message("Зміни збережені", true);
     }
 
-    function create_test() {
-        if (test_amount < test.length) {
-            test.length = test_amount;
-        }
-        else {
-            for(let i = test.length; i < test_amount; i++){
-            test.push({test_id: i + 1, input: "", output: "", status: "Closed"});
-        }
+    function add_test() {
+        test.push({test_id: test.length + 1 , input: "", output: "", status: "Closed"});
         test = test;
-        }
     }
+
+    function delete_test(event) {
+        const buttonName = Number(event.currentTarget.name);
+        test.splice(buttonName, 1);
+        test = test;
+    }
+
 </script>
 
 
@@ -62,40 +68,58 @@
     <title>Create task</title>
 </svelte:head>
 
-<main style="display: inline-block; margin-left: 1vw;">
-    <div style="display: inline-block">
-        <p>Кількість тестів</p>
-        <input type="text" id="tests_amount" style="margin-left: 0; " bind:value={test_amount}>
-        <button on:click={create_test} class="submit_button" style="margin-top: 7px; margin-right: 0;">Створити тести</button>
-    </div>
+<main class="col-md-12 col-lg-9">
+    <p>Тести</p>
+    {#if test}
+        {#each test as test, i}
+            <div class="row">
 
- 
-
-        <table>
-            <tr>
-                <th>№</th>
-                <th>Вхідні дані</th>
-                <th>Вихідні дані</th>
-                <th>Статус тесту</th>
-            </tr>
-            {#if test}
-                {#each test as test}
-                    <tr>
-                        <td>{test.test_id}</td>
-                        <td><textarea name="input_value" id="input_value" class="test_area"  bind:value={test.input} on:input={resize}></textarea></td>
-                        <td><textarea name="outnput_value" id="outnput_value"  class="test_area" bind:value={test.output} on:input={resize}></textarea></td>
-                        <td>
+                <details>
+                    <summary>
+                        <p>Тест {i + 1}</p>     
+                        <button class="delete_button" name={i} on:click={delete_test}>
+                            <svg  name={i} width="35" xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 0 96 96" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor" style="color:red; float:right; position:flexbox; margin-right:10px">
+                                <path name={i} d="m24,78c0,4.968 4.029,9 9,9h30c4.968,0 9-4.032 9-9l6-48h-60l6,48zm33-39h6v39h-6v-39zm-12,0h6v39h-6v-39zm-12,0h6v39h-6v-39zm43.5-21h-19.5c0,0-1.344-6-3-6h-12c-1.659,0-3,6-3,6h-19.5c-2.487,0-4.5,2.013-4.5,4.5s0,4.5 0,4.5h66c0,0 0-2.013 0-4.5s-2.016-4.5-4.5-4.5z"/>
+                            </svg>
+                        </button>
+      
+                    </summary>
+                    <div class="row">
+                        <div class="col-12">
                             <select class="select" bind:value={test.status}>
                                 <option value="Opened">Opened</option>
                                 <option value="Closed">Closed</option>
                             </select>
-                        </td>
-                    </tr>
-                {/each}
-            {/if}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-6">
+                            <p>Вхідні дані</p>
+                            <textarea name="input_value" id="input_value" class="test_area"  bind:value={test.input}  on:input={resize}></textarea>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <p>Вхідні дані</p>
+                            <textarea name="output_value" id="output_value" class="test_area" bind:value={test.output} on:input={resize}></textarea>
+                    </div> 
+                </details>
+            </div>
+        {/each}
+    {/if}
 
-        </table>
-        <button on:click={save}>Зберегти зміни</button>
+
+        
+    <div class="row">
+        <div class="col-12">
+            <button class="submit_button" on:click={add_test}>Додати тест</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <button class="submit_button" on:click={save}>Зберегти зміни</button>
+        </div>
+    </div>
+    
 </main>
 
 <style>
@@ -103,58 +127,58 @@
         color:white;
         font-family: "e-Ukraine";
         font-size: 22px;
+        display: inline-block;
     }
-    input{
-        outline: none;
-        border: none;
-        background-color: #333333;
-        border-radius: 5px;
-        width: 35vw;
-        height: 56px;
-        margin-top: 7px;
-        margin-bottom: 10px;
-        margin-right: 2vw;
+    summary{
         color: white;
-        font-size: 22px;
-        font-family: "e-Ukraine";
-
+        background-color: #313030;
+        width: 100%;
+        height: 60px;
+        border-radius: 5px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: 5px;
+        margin-bottom: 15px;
     }
     .test_area{
         outline: none;
         border: none;
-        background-color: #333333;
-        width: 15vw;
-        height: 30px;
+        background-color: #555454;
+        border-radius: 10px;
+        width: 100%;
+        height: 100px;
         color: white;
-        font-size: 22px;
+        font-size: 16px;
         font-family: "e-Ukraine";
-        resize: none;
-        display:flex;
         margin: auto;
 
     }
     select{
         outline: none;
         border: none;
-        background-color: #333333;
-        width: 15vw;
-        height: 60px;
+        background-color: #555454;
+        width: 100%;
+        height: 50px;
+        border-radius: 5px;
         color: white;
-        font-size: 22px;
+        font-size: 18px;
         font-family: "e-Ukraine";
         resize: none;
         display:flex;
-        margin: auto;
+        margin-bottom: 5px;
+    }
+
+    .delete_button{
+        outline: none;
+        border: none;
+        background-color: transparent;
+        float:right;
     }
 
     .submit_button{
-        width: 35vw;
-        display: inline-block;
-    }
-    button{
         outline: none;
         border: none;
-        width: 72.5vw;
+        width: 100%;
         height: 60px;
         background-color: #28743b;
         border-radius: 5px;
@@ -164,25 +188,5 @@
         font-family: "e-Ukraine";
         text-align: center;
         text-decoration: none;
-    }
-    table{
-        width: 72.5vw;
-        background-color: #28743b;
-        margin-top: 15px;
-        font-size: 18px;
-        color: white;
-        font-family: "e-Ukraine";
-        text-align: center;
-        border-radius: 5px;
-    }
-    th{
-        background-color: #252526;
-        height: 35px;
-        border-radius: 5px;
-    }
-    td{
-        background-color: #333333;
-        height: 30px;
-        border-radius: 5px;
     }
 </style>

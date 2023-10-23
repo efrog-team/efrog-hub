@@ -171,7 +171,7 @@
         border: none;
         background-color: #333333;
         border-radius: 5px;
-        width: calc(32vw - 4px);
+        width: 100%;
         height: 58px;
         margin-top: 15px;
         margin-right: 4vw;
@@ -180,7 +180,7 @@
     .submit_button{
         outline: none;
         border: none;
-        width: 32vw;
+        width: 100%;
         height: 60px;
         background-color: #28743b;
         border-radius: 5px;
@@ -204,35 +204,67 @@
 <svelte:head>
     <title>Create task</title>
 </svelte:head>
-
-<main style="display: inline-block; margin-left: 2vw; max-width: 69vw">
-    <div style="display: inline-block">
+ 
+<main class="col-md-12 col-lg-9">
+    <div style="row">
         <p>Efrog</p>
-        <button on:click={create_file} class="submit_button" style="margin-right: 4vw">Завантажити файл</button>
-        <input type="file" style="display: none;" name ="upload_file" on:change={upload_file}>
-        <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button">Підвантажити файл</button>
+        <diw class="row">
+            <div class="col-md-12 col-lg-6">
+                <button on:click={create_file} class="submit_button">Завантажити файл</button>
+            </div>
+            <div class="col-12 col-lg-6">
+                <input type="file" style="display: none;" name ="upload_file" on:change={upload_file}>
+                <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button">Підвантажити файл</button>
+            </div>
+        </diw>
+        
+        
         <br>
         <p>Ejudge</p>
 
-        <input type="text" class="input" bind:value={name_ejudge} style="width: 68vw;" placeholder="Назва задачі, яку ви бажаєте імпортувати з архіву контесту">
+        <div class="row">
+            <div class="col-12">
+                <input type="text" class="input" bind:value={name_ejudge}  placeholder="Назва задачі, яку ви бажаєте імпортувати з архіву контесту">
+            </div>       
+        </div>
 
-        <br>
-        <input type="file" style="display: none;" name ="upload_file_ejudge" on:change={upload_file_ejudge}>
-        <button on:click={() => document.querySelector("input[name=upload_file_ejudge]").click()} class="submit_button" style="margin-right: 4vw">Стандартна</button>
-
-        <input type="file" style="display: none;" name ="upload_file_ejudge_alternative" on:change={upload_file_ejudge_alternative}>
-        <button on:click={() => document.querySelector("input[name=upload_file_ejudge_alternative]").click()} class="submit_button" >Альтернативна</button>
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <input type="file" style="display: none;" name ="upload_file_ejudge" on:change={upload_file_ejudge}>
+                <button on:click={() => document.querySelector("input[name=upload_file_ejudge]").click()} class="submit_button">Стандартна</button>
+            </div>
+            <div class="col-12 col-lg-6">
+                <input type="file" style="display: none;" name ="upload_file_ejudge_alternative" on:change={upload_file_ejudge_alternative}>
+                <button on:click={() => document.querySelector("input[name=upload_file_ejudge_alternative]").click()} class="submit_button" >Альтернативна</button>
+            </div>
+        </div>
 
         <br>
         <p>CMS</p>
-        <input type="file" style="display: none;" name ="upload_file_cms" on:change={upload_file_cms}>
-        <input type="text" class="input" bind:value={name_cms} placeholder="Ведіть назву задачі">
-        <button on:click={() => document.querySelector("input[name=upload_file_cms]").click()} class="submit_button" >Підвантажити файл cms</button>
+
+        <diw class="row">
+            <div class="col-md-12 col-lg-6">
+                <input type="text" class="input" bind:value={name_cms} placeholder="Ведіть назву задачі">
+            </div>
+            <div class="col-12 col-lg-6">
+                <input type="file" style="display: none;" name ="upload_file_cms" on:change={upload_file_cms}>
+                <button on:click={() => document.querySelector("input[name=upload_file_cms]").click()} class="submit_button" >Підвантажити файл</button>
+            </div>
+        </diw>
+
 
         <br>
         <p>Polygon</p>
-        <input type="file" style="display: none;" name ="upload_file_polygon" on:change={upload_file_polygon}>
-        <input type="text" class="input" bind:value={language_polygon} placeholder="Ведіть  мову задачі">
-        <button on:click={() => document.querySelector("input[name=upload_file_polygon]").click()} class="submit_button" >Підвантажити файл polygon</button>
+
+        <diw class="row">
+            <div class="col-md-12 col-lg-6">
+                <input type="text" class="input" bind:value={language_polygon} placeholder="Ведіть  мову задачі">
+            </div>
+            <div class="col-12 col-lg-6">
+                <input type="file" style="display: none;" name ="upload_file_polygon" on:change={upload_file_polygon}>
+                <button on:click={() => document.querySelector("input[name=upload_file_polygon]").click()} class="submit_button" >Підвантажити файл</button>
+            </div>
+        </diw>
+        
     </div>
 </main>
