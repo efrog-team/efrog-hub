@@ -8,5 +8,5 @@ export async function load({cookies}) {
     cookies.delete("state", { path: '/' });
     cookies.set("state", state, { path: '/' });
 
-    throw redirect(303, `${authUrl}/login?response_type=code&redirect_uri=${clientUrl}/api/authorization/callback&state=${state}`);
-}
+    throw redirect(303, `${authUrl}/en/login?response_type=code&redirect_uri=${clientUrl}/api/authorization/callback&state=${state}`);
+} 
