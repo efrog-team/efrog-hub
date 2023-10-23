@@ -24,7 +24,6 @@
 		"adm-zip": "^0.5.10",
 		"bcrypt": "^5.1.0",
 		"bootstrap": "^5.3.2",
-		"fs": "^0.0.1-security",
 		"fs-extra": "^11.1.1",
 		"highlight-within-textarea": "^2.0.5",
 		"js-yaml": "^4.1.0",
