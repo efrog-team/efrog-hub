@@ -30,8 +30,8 @@ export async function POST({ request, cookies }) {
 
 
     fs.writeFileSync(main_path + 'general_info/name.txt', name);
-    fs.writeFileSync(main_path + 'general_info/time_limit.txt', time_limit);
-    fs.writeFileSync(main_path + 'general_info/memory_limit.txt', memory_limit);
+    fs.writeFileSync(main_path + 'general_info/time_limit.txt', String(time_limit));
+    fs.writeFileSync(main_path + 'general_info/memory_limit.txt', String(memory_limit));
     
     fs.writeFileSync(main_path + 'statement/statement.tex', statement);
     fs.writeFileSync(main_path + 'statement/input_statement.tex', input_statement);

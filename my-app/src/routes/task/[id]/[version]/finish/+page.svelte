@@ -108,7 +108,7 @@
 
         async function upload_file_cms(event) {
             const file = event.target.files[0];
-
+            console.log(file)
             const formData = new FormData();
             formData.append('file', file);
 
@@ -117,6 +117,7 @@
                 return;
             }
             formData.append('taskName', name_cms);
+            console.log(formData)
             const response = await fetch('/api/task/finish/upload-file-cms', {
                 method: 'POST',
                 body: formData,
