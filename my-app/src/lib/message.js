@@ -30,4 +30,5 @@ export async function message(text, status) {
   setTimeout(() => {
     document.body.removeChild(div);
   }, 3000);
+  return;
 }

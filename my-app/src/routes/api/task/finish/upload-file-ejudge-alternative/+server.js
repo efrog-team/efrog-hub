@@ -1,5 +1,4 @@
 import { json } from '@sveltejs/kit';
-import fs from 'fs';
 import AdmZip from 'adm-zip';
 import xml2js from 'xml2js';
 

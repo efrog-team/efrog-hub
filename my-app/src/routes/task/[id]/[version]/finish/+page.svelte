@@ -10,20 +10,20 @@
             body: JSON.stringify({task_id, version}),
         });
 
-        const url = await response.json();
-
-        let anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.download = task_id;
-        anchor.style = "display: none";
-        anchor.click();
-        anchor.remove();
-
-
-        await fetch('/api/task/finish/create-file', {
-            method: 'PUT'
-        });
-
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'output.zip';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } else {
+            let error = await response.text();
+            error = JSON.parse(error).error;
+            message(error, false);
+            return;
+        }
     }
 
     async function upload_file(event) {
@@ -31,21 +31,24 @@
 
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('task_id', task_id)
+        formData.append('task_id', task_id);
+        
         const response = await fetch('/api/task/finish/upload-file', {
             method: 'POST',
             body: formData,
         });
 
-        const task = await response.json();
-
-        if (typeof task === "string"){
-            message(task, false);
+        if(response.ok){
+          const task = await response.json();
+          message("Задача успішно завантажена", true);
+          localStorage.setItem(task_id, JSON.stringify(task));
+        } else {
+            let error = await response.text();
+            error = JSON.parse(error).error;
+            message(error, false);
             return;
         }
-        message("Задача успішно завантажена", true);
-        localStorage.setItem(task_id, JSON.stringify(task));
-  }
+    }
 
 
   async function upload_file_ejudge(event) {
@@ -53,6 +56,7 @@
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('task_id', task_id);
 
         if(!name_ejudge){
                 message("Ведіть назву задачі", false);
@@ -70,18 +74,18 @@
           localStorage.setItem(task_id, JSON.stringify(task))
           return;
         }
-
         let error = await response.text();
         error = JSON.parse(error).error;
         message(error, false);
         return;
-      }
+    }
 
       async function upload_file_ejudge_alternative(event) {
         const file = event.target.files[0];
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('task_id', task_id);
 
         if(!name_ejudge){
                 message("Ведіть назву задачі", false);
@@ -104,13 +108,14 @@
         error = JSON.parse(error).error;
         message(error, false);
         return;
-        }
+    }
 
         async function upload_file_cms(event) {
             const file = event.target.files[0];
-            console.log(file)
+
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('task_id', task_id);
 
             if(!name_cms){
                 message("Ведіть назву задачі", false);
@@ -139,6 +144,7 @@
 
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('task_id', task_id);
 
             if(!language_polygon){
                 message("Ведіть мову задачі", false);

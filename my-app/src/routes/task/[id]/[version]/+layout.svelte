@@ -113,7 +113,7 @@
                 <p class="text" style="display:inline">Історія створення</p>
             </summary>
             {#each data.version as commit}
-                <button class="button"  on:click={() => oldCommit(commit.version)}>
+                <button class="commit"  on:click={() => oldCommit(commit.version)}>
                     {commit.version}. {commit.version_name}
                 </button>
             {/each}
@@ -172,7 +172,7 @@ a {
 }
 
 .active {
-    color: #28743b
+    color: #28743b;
 }
 
 .task_input, .task_button {
@@ -199,4 +199,13 @@ a {
     float: left;
 }
 
+.commit{
+    outline: none;
+    background-color: transparent;
+    border: none;
+    padding: 5px 10px; 
+    cursor: pointer; 
+    color: #28743b;
+    display: flex;
+}
 </style>
