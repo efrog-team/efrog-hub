@@ -1,0 +1,32 @@
+version: "3"
+services:
+  db:
+    container_name: efrog-hub-database
+    build:
+      context: ../database
+      dockerfile: ./Dockerfile
+    ports:
+      - "5917:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD"]
+      interval: 1s
+      timeout: 1s
+      retries: 1000
+
+  app:
+    container_name: efrog-hub-app
+    build:
+      context: ../../
+      dockerfile: ./efrog-hub/app/Dockerfile
+    environment:
+      - DB_HOST=efrog-hub-database
+      - DB_PORT=5917
+    ports:
+      - "1204:1204"
+    depends_on:
+        db:
+                condition: service_healthy
+    links:
+          - db
