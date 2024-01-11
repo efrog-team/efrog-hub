@@ -8,14 +8,19 @@ RUN apt-get update && \
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get -y install nodejs
 
-COPY efrog-hub/my-app /efrog-hub/my-app
+COPY /my-app /my-app
 
-WORKDIR /efrog-hub/my-app
+WORKDIR /my-app
 
 RUN npm install
-RUN npm update
+
+RUN npm run build
 
 EXPOSE 1204
-EXPOSE 5917
+EXPOSE 3306
 
-CMD ["npm", "run", "dev"]
+ENV HOST=0.0.0.0
+ENV PORT=1204
+ENV BODY_SIZE_LIMIT=0
+
+CMD ["node", "build"]

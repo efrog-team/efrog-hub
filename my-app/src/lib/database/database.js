@@ -2,11 +2,11 @@ import mysql from 'mysql2';
 
 // Пул з'єднань до бази даних 
 const pool = mysql.createPool({
-    host: "localhost",
+    host: process.env.DB_HOST || "localhost",
     user: "root",
     database: "db",
     password: "root",
-    port: 5917,
+    port: process.env.DB_PORT || 5917,
 });
 
 // Функція на редагування бази даних
