@@ -220,7 +220,7 @@
                 <button on:click={create_file} class="submit_button">Завантажити файл</button>
             </div>
             <div class="col-12 col-lg-6">
-                <input type="file" style="display: none;" name ="upload_file" on:change={upload_file}>
+                <input type="file" accept=".zip" style="display: none;" name ="upload_file" on:change={upload_file}>
                 <button on:click={() => document.querySelector("input[name=upload_file]").click()} class="submit_button">Підвантажити файл</button>
             </div>
         </diw>
@@ -237,11 +237,11 @@
 
         <div class="row">
             <div class="col-md-12 col-lg-6">
-                <input type="file" style="display: none;" name ="upload_file_ejudge" on:change={upload_file_ejudge}>
+                <input type="file" accept=".zip" style="display: none;" name ="upload_file_ejudge" on:change={upload_file_ejudge}>
                 <button on:click={() => document.querySelector("input[name=upload_file_ejudge]").click()} class="submit_button">Стандартна</button>
             </div>
             <div class="col-12 col-lg-6">
-                <input type="file" style="display: none;" name ="upload_file_ejudge_alternative" on:change={upload_file_ejudge_alternative}>
+                <input type="file" accept=".zip" style="display: none;" name ="upload_file_ejudge_alternative" on:change={upload_file_ejudge_alternative}>
                 <button on:click={() => document.querySelector("input[name=upload_file_ejudge_alternative]").click()} class="submit_button" >Альтернативна</button>
             </div>
         </div>
@@ -254,7 +254,7 @@
                 <input type="text" class="input" bind:value={name_cms} placeholder="Ведіть назву задачі">
             </div>
             <div class="col-12 col-lg-6">
-                <input type="file" style="display: none;" name ="upload_file_cms" on:change={upload_file_cms}>
+                <input type="file" accept=".zip" style="display: none;" name ="upload_file_cms" on:change={upload_file_cms}>
                 <button on:click={() => document.querySelector("input[name=upload_file_cms]").click()} class="submit_button" >Підвантажити файл</button>
             </div>
         </diw>
@@ -268,7 +268,7 @@
                 <input type="text" class="input" bind:value={language_polygon} placeholder="Ведіть  мову задачі">
             </div>
             <div class="col-12 col-lg-6">
-                <input type="file" style="display: none;" name ="upload_file_polygon" on:change={upload_file_polygon}>
+                <input type="file" accept=".zip" style="display: none;" name ="upload_file_polygon" on:change={upload_file_polygon}>
                 <button on:click={() => document.querySelector("input[name=upload_file_polygon]").click()} class="submit_button" >Підвантажити файл</button>
             </div>
         </diw>

@@ -24,7 +24,7 @@ export let randomString = () => {
 }
 
 export function checkValue(value, min, max) {
-    const regex = /^(\d+(\.\d*)?|\.\d+)$/;
+    const regex = /^\d+$/;
 
     if (!regex.test(value)) {
     return false; 

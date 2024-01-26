@@ -1,7 +1,9 @@
 <script>
     import {generate_formula} from '$lib/database/katex.js'
+    import renderMathInElement from 'katex/contrib/auto-render'
     let id, name, time_limit, memory_limit, statement, input_statement, output_statement, note, test, task;
     import { onMount } from 'svelte';
+    
     export let data;
 
     onMount(() => {
@@ -14,19 +16,48 @@
         input_statement = data.task.input_statement;
         output_statement = data.task.output_statement;
         note = data.task.note;
-        test = data.test;
+        test = data.test; 
 
         if (localStorage.getItem(id) != null){
             task = JSON.parse(localStorage.getItem(id));
             name = task.name;
             time_limit = task.time_limit;
             memory_limit = task.memory_limit;
-            statement = task.statement;
-            input_statement = task.input_statement;
-            output_statement = task.output_statement;
-            note = task.note;
+            statement = task.statement.replace(/<span style="color: green;">/g, '').replace(/<\/span>/g, '').replace(/\n/g, '<br>');
+            input_statement = task.input_statement.replace(/<span style="color: green;">/g, '').replace(/<\/span>/g, '').replace(/\n/g, '<br>');
+            output_statement = task.output_statement.replace(/<span style="color: green;">/g, '').replace(/<\/span>/g, '').replace(/\n/g, '<br>');
+            note = task.note.replace(/<span style="color: green;">/g, '').replace(/<\/span>/g, '').replace(/\n/g, '<br>');
             test = task.test;
         }
+
+        const statementDiv = document.getElementById('statement');
+        statementDiv.innerHTML = statement;
+
+        const input_statementDiv = document.getElementById('input_statement');
+        input_statementDiv.innerHTML = input_statement;
+
+        const output_statementDiv = document.getElementById('output_statement');
+        output_statementDiv.innerHTML = output_statement;
+
+        const noteDiv = document.getElementById('note');
+        noteDiv.innerHTML = note;
+
+        renderMathInElement(document.getElementById('content'), {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true},
+            {left: "\\begin{align}", right: "\\end{align}", display: true},
+            {left: "\\begin{alignat}", right: "\\end{alignat}", display: true},
+            {left: "\\begin{gather}", right: "\\end{gather}", display: true},
+            {left: "\\begin{CD}", right: "\\end{CD}", display: true},
+            {left: "\\[", right: "\\]", display: true}
+
+          ],
+          ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "option"],
+          // Добавьте другие параметры по необходимости
+        });
 
     })
 </script>
@@ -50,51 +81,27 @@
                 <p>Ліміт часу: {time_limit} с</p>
                 <p>Ліміт пам'яті: {memory_limit} MB</p>
                 <br>
-                
-                {#if statement}
+                <div id='content' class="text">
+                    {#if statement}
                     <p>Умова</p>
-                    {#each statement.split('$$') as fragment, index}
-                        {#if index % 2 === 0}
-                            <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                        {:else}
-                            <p class="text">{@html generate_formula(fragment)}</p>
-                        {/if}
-                    {/each}
-                {/if}
-
-        
-                {#if input_statement}
-                    <p>Вхідні дані</p>
-                    {#each input_statement.split('$$') as fragment, index}
-                        {#if index % 2 === 0}
-                            <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                        {:else}
-                            <p class="text">{@html generate_formula(fragment)}</p>
-                        {/if}
-                    {/each}
-                {/if}
-                
-                {#if output_statement}
-                    <p>Вихідні дані</p>
-                    {#each output_statement.split('$$') as fragment, index}
-                    {#if index % 2 === 0}
-                        <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                    {:else}
-                        <p class="text">{@html generate_formula(fragment)}</p>
                     {/if}
-                    {/each}
-                {/if}
-        
-                {#if note}
+                    <div id='statement' class="text"></div>
+
+                    {#if input_statement}
+                    <p>Вхідні дані</p>
+                    {/if}
+                    <div id='input_statement' class="text"></div>
+
+                    {#if output_statement}
+                    <p>Вихідні дані</p>
+                    {/if}
+                    <div id='output_statement' class="text"></div>
+
+                    {#if note}
                     <p>Примітки</p>
-                        {#each note.split('$$') as fragment, index}
-                        {#if index % 2 === 0}
-                        <p class="text">{@html fragment.replace(/\n/g, '<br>')}</p>
-                        {:else}
-                            <p class="text">{@html generate_formula(fragment)}</p>
-                        {/if}
-                    {/each}
-                {/if}
+                    {/if}
+                    <div id='note' class="text"></div>
+                </div>
                 
                 
                 <p>Приклади</p>
@@ -110,8 +117,8 @@
                                         <th>Вихідні дані</th>
                                     </tr>
                                     <tr>
-                                        <td>{test.input}</td>
-                                        <td>{test.output}</td>
+                                        <td>{@html test.input.replace(/\n/g, '<br>')}</td>
+                                        <td>{@html test.output.replace(/\n/g, '<br>')}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -135,6 +142,8 @@
   .text{
     display: inline;
     font-size: 14px;
+    color:white;
+    font-family: "e-Ukraine";
   }
   .preview{
     background-color: #313030;

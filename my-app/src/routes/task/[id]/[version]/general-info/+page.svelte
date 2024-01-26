@@ -51,7 +51,7 @@
 
     }
     function check(value, min, max) {
-        const regex = /^(\d+(\.\d*)?|\.\d+)$/;
+        const regex = /^\d+$/;
 
         if (!regex.test(value)) {
         return false; 
@@ -82,12 +82,12 @@
     
         <div style="display: inline-block" class="col-md-12 col-lg-4">
             <p>Час виконання</p>
-            <input type="text" id="time_limit" bind:value={time_limit}>
+            <input type="number" min="1" max="10" step="1" id="time_limit" bind:value={time_limit}>
         </div>
     
         <div style="display: inline-block" class="col-md-12 col-lg-4">
             <p>Обсяг пам'яті</p>
-            <input type="text" id="memory_limit" style="margin-right: 0;" bind:value={memory_limit}>
+            <input type="number" min="4" max="1024" step="1" id="memory_limit" style="margin-right: 0;" bind:value={memory_limit}>
         </div>
     </div>
     
