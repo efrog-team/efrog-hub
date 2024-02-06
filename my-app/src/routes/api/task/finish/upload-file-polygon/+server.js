@@ -1,12 +1,10 @@
 import { json } from '@sveltejs/kit';
-import AdmZip from 'adm-zip';
-import fs from 'fs';
 import fse from 'fs-extra';
 import { getClientrId } from '$lib/server/main';
-import { authorization, checkValue } from '$lib/server/check.js';
+import { authorization } from '$lib/server/check.js';
+import { spawnSync } from 'child_process';
+import path from 'path';
 
-let name, time_limit, memory_limit, statement, input_statement, output_statement, note;
-let test = [];
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST( {request, cookies} ) {
@@ -25,78 +23,67 @@ export async function POST( {request, cookies} ) {
 
         // Get task arhive and save them into folder
         const file = formData.get('file');
-
-        if (fs.existsSync(`./files/upload/polygon_${curent_sesion}`)) {
-            fse.removeSync(`./files/upload/polygon_${curent_sesion}`);
-        }
-        fs.mkdirSync(`./files/upload/polygon_${curent_sesion}`);
-
-        let targetFilePath = `./files/upload/polygon_${curent_sesion}/${file.name}`;
-        const fileBuffer = await file.arrayBuffer();
-        fs.writeFileSync(targetFilePath, new Uint8Array(fileBuffer));
-
-        let zip = new AdmZip(targetFilePath);
-        zip.extractAllTo("./files/upload/polygon_" + curent_sesion + "/");
-        fs.unlinkSync(targetFilePath);
-
-        let main_path = `./files/upload/polygon_${curent_sesion}/`;
-
-        //Check folder with task about nesessary folders and files
         const language = formData.get('language');
+        const fileName = file.name;
+        
+        const reader = file.stream().getReader();
+        let chunks = [];
 
-        if (!fs.existsSync(`${main_path}/statements/${language}/problem-properties.json`)) {
-            fse.removeSync(main_path);
-            return json({ error: `File ${language}/problem-properties.json does not exist` }, { status: 404 });
+        while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        chunks.push(value);
         }
 
-        if (!fs.existsSync(`${main_path}/tests`)) {
-            fse.removeSync(main_path);
-            return json({ error: `Directory tests does not exist` }, { status: 404 });
-        }
+        const fileBuffer = Buffer.concat(chunks);
+        const base64String = fileBuffer.toString('base64');
 
-        // Process general info
-        let task =  JSON.parse(fs.readFileSync(`${main_path}/statements/${language}/problem-properties.json`, "utf-8"));
+        const command = 'node';
+        // Get patht to process file
+        const targetFileName = 'src/lib/upload/polygon.js';
+        const currentDirectory = path.resolve();
+        const scriptPath = path.resolve(currentDirectory, targetFileName);
 
-        name = task.name;
-        time_limit = task.timeLimit / 1000 || 1;
-        memory_limit = task.memoryLimit / 1_048_576 || 256;
-
-        if(!checkValue(time_limit, 1, 10)) {
-            return json({ error: `Time must be between 1 and 10 seconds` }, { status: 406 });  
-        }
-        if(!checkValue(memory_limit, 4, 1024)) {
-            return json({ error: `Memory must be between 4 and 1024 MB` }, { status: 406 });
-        }
-
-        // Process statement
-        statement = task.legend;
-        input_statement = task.input || "";
-        output_statement = task.output || "";
-        note = task.notes || "";
-    
-        if(!statement) {
-            return json({ error: `There are not statement` }, { status: 404 });
-        }
-
-        // Process test cases
-        test = [];
-
-        fs.readdirSync(`${main_path}/tests`).forEach((file) => {
-            if(file.split(".")[1] == "a"){
-                if (!fs.existsSync(`${main_path}/tests/${file.split(".")[0]}`)) {
-                    fse.removeSync(main_path);
-                    return json({ error: `There are answer ${file}, but no test ${file.split(".")[0]}` }, { status: 404 });
-                }
-    
-                const input = fs.readFileSync(`${main_path}/tests/${file.split(".")[0]}`, "utf-8");
-                const output = fs.readFileSync(`${main_path}/tests/${file}`, "utf-8");
-    
-                test.push({test_id: test.length + 1, input: input, output: output, status: "Closed" });
-            }
+        const inputData = JSON.stringify({
+            base64String,
+            curent_sesion,
+            currentDirectory,
+            fileName,
+            language
         });
+        
+        const options = {
+            input: inputData, 
+            stdio: 'pipe',
+            uid: 65534
+        };
+        
+        const result = spawnSync(command, [scriptPath], options);
 
-        // Return task data
-        return json({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test});
+        if (result.status === 0) {
+            if (result.stdout) {
+                const data = JSON.parse(result.stdout.toString());
+                if(data.error){
+                    return json({ error: data.error }, { status: data.status });
+                }
+                else{
+                    return(json(data));
+                }
+            } else {
+                return json({ error: "Unexpected error occurred during reading data" }, { status: 500 });
+            }
+
+        } else{
+            if (result.stderr) {
+                const stderrString = result.stderr.toString();
+                console.log(stderrString);
+                return json({ error: stderrString }, { status: 404 });
+            } else {
+                return json({ error: "Unexpected error occurred" }, { status: 500 });
+            }
+            
+        };
 
     } catch (error) {
         // In instance of error return error

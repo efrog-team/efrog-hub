@@ -60,7 +60,6 @@ export async function POST( {request, cookies} ) {
         const result = spawnSync(command, [scriptPath], options);
 
         if (result.status === 0) {
-            console.log(result.stdout);
             if (result.stdout) {
                 const data = JSON.parse(result.stdout.toString());
                 if(data.error){
