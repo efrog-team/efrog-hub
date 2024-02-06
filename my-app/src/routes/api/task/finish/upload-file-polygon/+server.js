@@ -39,6 +39,7 @@ export async function POST( {request, cookies} ) {
         const fileBuffer = Buffer.concat(chunks);
         const base64String = fileBuffer.toString('base64');
 
+
         const command = 'node';
         // Get patht to process file
         const targetFileName = 'src/lib/upload/polygon.js';
@@ -65,6 +66,7 @@ export async function POST( {request, cookies} ) {
             if (result.stdout) {
                 const data = JSON.parse(result.stdout.toString());
                 if(data.error){
+                    console.log(data.error);
                     return json({ error: data.error }, { status: data.status });
                 }
                 else{

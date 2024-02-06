@@ -14,7 +14,6 @@ rl.on('line', (input) => {
     const data = JSON.parse(input)
 
     const res = processFile(data.base64String, data.curent_sesion, data.currentDirectory, data.fileName, data.language);
-    // const res = JSON.stringify({status: 404, error: `There are not directories[i`})
     if(typeof res == 'string'){
         console.log(res);
     }
@@ -47,27 +46,27 @@ function processFile(base64String, curent_sesion, main_dir, fileName, language) 
         let name, time_limit, memory_limit, statement, input_statement, output_statement, note;
         let test = [];
 
-        if (fs.existsSync(`${main_dir}/files/upload/polygon_${curent_sesion}`)) {
-            fse.removeSync(`${main_dir}/files/upload/polygon_${curent_sesion}`);
+        if (fs.existsSync(`./files/upload/polygon_${curent_sesion}`)) {
+            fse.removeSync(`./files/upload/polygon_${curent_sesion}`);
         }
-        fs.mkdirSync(`${main_dir}/files/upload/polygon_${curent_sesion}`);
+        fs.mkdirSync(`./files/upload/polygon_${curent_sesion}`);
 
         let targetFilePath = `${main_dir}/files/upload/polygon_${curent_sesion}/${fileName}`;
 
         const fileBuffer = Buffer.from(base64String, 'base64');
         fs.writeFileSync(targetFilePath, fileBuffer);
-
+        
         let zip = new AdmZip(targetFilePath);
-        zip.extractAllTo(`${main_dir}/files/upload/polygon__${curent_sesion}/`);
+        zip.extractAllTo(`${main_dir}/files/upload/polygon_${curent_sesion}/`);
         fs.unlinkSync(targetFilePath);
-
+        
         let main_path = `${main_dir}/files/upload/polygon_${curent_sesion}/`;
 
         //Check folder with task about nesessary folders and files
-        
+
 
         if (!fs.existsSync(`${main_path}/statements/${language}/problem-properties.json`)) {
-            return(JSON.stringify({status: 404, error: `File ${language}/problem-properties.json does not exist`}));
+            return(JSON.stringify({status: 404, error: ` There are not statements/${language}/problem-properties.json does not exist`}));
         }
 
         if (!fs.existsSync(`${main_path}/tests`)) {
