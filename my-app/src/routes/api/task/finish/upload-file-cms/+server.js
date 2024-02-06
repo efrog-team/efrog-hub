@@ -1,13 +1,9 @@
 import { json } from '@sveltejs/kit';
-import AdmZip from 'adm-zip';
-import yaml from 'js-yaml';
-import fs from 'fs';
 import fse from 'fs-extra';
 import { getClientrId } from '$lib/server/main';
-import { authorization, checkValue } from '$lib/server/check.js';
-
-let name, time_limit, memory_limit, statement, input_statement, output_statement, note;
-let test = [];
+import { authorization } from '$lib/server/check.js';
+import { spawnSync } from 'child_process';
+import path from 'path';
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST( {request, cookies} ) {
@@ -23,93 +19,70 @@ export async function POST( {request, cookies} ) {
         if (!verdict) {
             return json({ error: `Tou are not author of that task` }, { status: 403 });
         }
-
-        // Get task arhive and save them into folder
+        // Get task arhive and make base64 to give it into child process
         const file = formData.get('file');
-
-        if (fs.existsSync(`./files/upload/cms_${curent_sesion}`)) {
-            fse.removeSync(`./files/upload/cms_${curent_sesion}`);
-        }
-        fs.mkdirSync(`./files/upload/cms_${curent_sesion}`);
-
-        let targetFilePath = `./files/upload/cms_${curent_sesion}/${file.name}`;
-        const fileBuffer = await file.arrayBuffer();
-        fs.writeFileSync(targetFilePath, new Uint8Array(fileBuffer));
-
-        let zip = new AdmZip(targetFilePath);
-        zip.extractAllTo("./files/upload/cms_" + curent_sesion + "/");
-        fs.unlinkSync(targetFilePath);
-
-        let main_path = `./files/upload/cms_${curent_sesion}/`;
-        let error_path = "./static/download/cms_" + curent_sesion;
-        const contests =  fs.readdirSync(main_path);
-        main_path = `${main_path}${contests[0]}/`;
-
-        //Check folder with task about nesessary folders and files
         const taskName = formData.get('taskName');
-        const directories = [
-            taskName, `${taskName}/task.yaml`,
-            `${taskName}/input`, `${taskName}/output`, `${taskName}/sol`, `${taskName}/statement`,
-            `${taskName}/statement/statement.tex`,
-        ]; 
+        const fileName = file.name;
 
-        for(let i = 0; i < directories.length; i++) {
-            if (!fs.existsSync(main_path + directories[i])) {
-                fse.removeSync(error_path);
-                return json({ error: `There are not ${directories[i]}` }, { status: 404 });  
-            }
+        const reader = file.stream().getReader();
+        let chunks = [];
+
+        while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        chunks.push(value);
         }
 
-        main_path = main_path + taskName + "/";
+        const fileBuffer = Buffer.concat(chunks);
+        const base64String = fileBuffer.toString('base64');
+
+        const command = 'node';
+        // Get patht to process file
+        const targetFileName = 'src/lib/upload/cms.js';
+        const currentDirectory = path.resolve();
+        const scriptPath = path.resolve(currentDirectory, targetFileName);
+
+        const inputData = JSON.stringify({
+            base64String,
+            curent_sesion,
+            currentDirectory,
+            fileName,
+            taskName
+        });
         
-        // Process general info
-        let task = yaml.load(fs.readFileSync(main_path + 'task.yaml', 'utf-8'));
-
-        const publicTestcases = task.public_testcases.split(',').map(item => parseInt(item.trim(), 10));
-    
-        name = task.name;
-        time_limit = task.time_limit;
-        memory_limit = task.memory_limit;
-
-        if(!checkValue(time_limit, 1, 10)){
-            return json({ error: `Time must be between 1 and 10 seconds` }, { status: 406 });  
-        }
-        if(!checkValue(memory_limit, 4, 1024)){
-            return json({ error: `Memory must be between 4 and 1024 MB` }, { status: 406 });
-        }
-
-        // Process statement
-        statement = fs.readFileSync(main_path + 'statement/statement.tex', 'utf-8');
-        input_statement = "";
-        output_statement = "";
-        note = "";
-
-        // Process test cases
-        test = [];
+        const options = {
+            input: inputData, 
+            stdio: 'pipe',
+            uid: 65534
+        };
         
-        for(let i = 0; i < task.n_input; i++) {
-            if(!fs.existsSync(main_path + `input/input${i}.txt`)) {
-                fse.removeSync(error_path);
-                return json({ error: `File input${i}.txt does not exist` }, { status: 404 });
-            }
-            if(!fs.existsSync(main_path + `output/output${i}.txt`)) {
-                fse.removeSync(error_path);
-                return json({ error: `File output${i}.txt does not exist` }, { status: 404 });
-            }
-    
-            let input = fs.readFileSync(main_path + `input/input${i}.txt`, 'utf8');
-            let output = fs.readFileSync(main_path + `output/output${i}.txt`, 'utf8');
-            let status = "Closed";
-    
-            if(publicTestcases.includes(i)) {
-                status = "Opened";
-            }
-    
-            test.push({test_id: i + 1, input: input, output: output, status: status});
-        }
+        const result = spawnSync(command, [scriptPath], options);
 
-        // Return task data
-        return json({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test});
+        if (result.status === 0) {
+            console.log(result.stdout);
+            if (result.stdout) {
+                const data = JSON.parse(result.stdout.toString());
+                if(data.error){
+                    return json({ error: data.error }, { status: data.status });
+                }
+                else{
+                    return(json(data));
+                }
+            } else {
+                return json({ error: "Unexpected error occurred during reading data" }, { status: 500 });
+            }
+
+        } else{
+            console.log(result.stderr);
+            if (result.stderr) {
+                const stderrString = result.stderr.toString();
+                console.log(stderrString);
+                return json({ error: stderrString }, { status: 404 });
+            } else {
+                return json({ error: "Unexpected error occurred" }, { status: 500 });
+            }
+        }
     } catch (error) {
         // In instance of error return error
         console.log(error);

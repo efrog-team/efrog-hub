@@ -56,20 +56,21 @@ export async function POST( {request, cookies} ) {
         };
         
         const result = spawnSync(command, [scriptPath], options);
-        // console.log(result.stdout.toString());
-        // console.log(result.stderr.toString());
+
         if (result.status === 0) {
-            console.log(result.stdout.toString())
-            const data = JSON.parse(result.stdout.toString());
-            console.log(data)
-            if(data.error){
-                return json({ error: data.error }, { status: data.status });
+            if (result.stdout) {
+                const data = JSON.parse(result.stdout.toString());
+                if(data.error){
+                    return json({ error: data.error }, { status: data.status });
+                }
+                else{
+                    return(json(data));
+                }
+            } else {
+                return json({ error: "Unexpected error occurred during reading data" }, { status: 500 });
             }
-            else{
-                return(json(data));
-            }
+
         } else{
-            console.log(result.stderr);
             if (result.stderr) {
                 const stderrString = result.stderr.toString();
                 console.log(stderrString);

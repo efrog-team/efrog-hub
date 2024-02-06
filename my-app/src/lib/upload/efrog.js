@@ -1,16 +1,6 @@
 const fs = require('fs');
 const fse = require('fs-extra');
 const AdmZip = require('adm-zip');
-const stream = require('stream');
-
-// const base64String = process.argv[2];
-// const curent_sesion = process.argv[3];
-// const main_dir = process.argv[4];
-// const fileName = process.argv[5];
-
-// if(!base64String){
-//     console.error('base64')
-// }
 
 const readline = require('readline');
 
@@ -64,7 +54,6 @@ function processFile(base64String, curent_sesion, main_dir, fileName) {
 
         let targetFilePath = `${main_dir}/files/upload/efrog_${curent_sesion}/${fileName}`;
 
-        // await createFileFromBase64(base64String, targetFilePath);
         const fileBuffer = Buffer.from(base64String, 'base64');
         fs.writeFileSync(targetFilePath, fileBuffer);
         
@@ -99,7 +88,7 @@ function processFile(base64String, curent_sesion, main_dir, fileName) {
         memory_limit = fs.readFileSync(main_path + 'general_info/memory_limit.txt', 'utf-8');
             
         if(!checkValue(time_limit, 1, 10)){
-            return(JSON.stringify({status: 404, error: `Time must be between 1 and 10 seconds`}));
+            return(JSON.stringify({status: 406, error: `Time must be between 1 and 10 seconds`}));
         }
         if(!checkValue(memory_limit, 4, 1024)){
             return(JSON.stringify({status: 406, error: `Memory must be between 4 and 1024 MB`}));
