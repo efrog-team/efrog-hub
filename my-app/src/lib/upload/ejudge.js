@@ -147,7 +147,11 @@ async function processFile(base64String, curent_sesion, main_dir, fileName, task
                 test.push({ test_id: test.length + 1, input: input_format, output: output_format, status: "Closed" });
             }
         }
-        return(JSON.stringify({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test}));
+        is_checker = 0;
+        checker_code = '';
+        checker_language = '';
+
+        return(JSON.stringify({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test, is_checker, checker_code, checker_language}));
     }
     catch(e){
         console.error(e)

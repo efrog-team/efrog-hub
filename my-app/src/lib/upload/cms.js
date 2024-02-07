@@ -124,8 +124,11 @@ function processFile(base64String, curent_sesion, main_dir, fileName, taskName) 
     
             test.push({test_id: i + 1, input: input, output: output, status: status});
         }
+        is_checker = 0;
+        checker_code = '';
+        checker_language = '';
 
-        return(JSON.stringify({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test}));
+        return(JSON.stringify({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test, is_checker, checker_code, checker_language}));
     }
     catch(e){
         console.error(e)

@@ -1,7 +1,7 @@
 version: "3"
 services:
     db:
-        container_name: efrog-hub-database
+        container_name: database
         build:
             context: ../database
             dockerfile: ./Dockerfile

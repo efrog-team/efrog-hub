@@ -21,7 +21,7 @@ export async function load({ cookies, params }) {
 
     // Отримання даних задачі з бази даних
     const task = (await db.send_ecran(
-        `SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note  
+        `SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note, is_checker, checker_code, checker_language  
         FROM task 
         WHERE task_id = ? AND version = ?`, 
         [task_id, params.version]

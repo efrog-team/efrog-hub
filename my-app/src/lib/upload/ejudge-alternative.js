@@ -143,7 +143,11 @@ async function processFile(base64String, curent_sesion, main_dir, fileName, task
 
 
         }
-        return(JSON.stringify({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test}));
+        is_checker = 0;
+        checker_code = '';
+        checker_language = '';
+
+        return(JSON.stringify({name, time_limit, memory_limit, statement, input_statement, output_statement, note, test, is_checker, checker_code, checker_language}));
     } catch(e){
         console.error(e)
         return({error: e})

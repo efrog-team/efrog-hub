@@ -14,6 +14,9 @@ CREATE TABLE task (
     input_statement TEXT NOT NULL,
     output_statement TEXT NOT NULL,
     note TEXT NOT NULL,
+    is_checker BOOLEAN NOT NULL,
+    checker_code TEXT,
+    checker_language TEXT,
     PRIMARY KEY (id)
 );
 
@@ -36,7 +39,7 @@ CREATE TABLE author (
     PRIMARY KEY (id)
 );
 
-INSERT INTO task (task_id, version, version_name, name, time_limit, memory_limit, statement, input_statement, output_statement, note) VALUES (1, 0, 'Task creation','Square of a number', 1, 256, 'Your are given a number n. Return the square of n.', 'n <= 10^6', 'n ** 2', 'Nothing');
+INSERT INTO task (task_id, version, version_name, name, time_limit, memory_limit, statement, input_statement, output_statement, note, is_checker) VALUES (1, 0, 'Task creation','Square of a number', 1, 256, 'Your are given a number n. Return the square of n.', 'n <= 10^6', 'n ** 2', 'Nothing', 0);
 
 INSERT INTO author (task_id, user_id, status) VALUES (1, 1, 'author');
 
