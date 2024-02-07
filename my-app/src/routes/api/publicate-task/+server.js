@@ -46,7 +46,7 @@ export async function POST({ request }) {
     }
 
     let task = await db.send_ecran(
-        `SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note  
+        `SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note, is_checker, checker_code, checker_language 
         FROM task 
         WHERE task_id = ? AND version = ?`, 
         [taskId, version]);
