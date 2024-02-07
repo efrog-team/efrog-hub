@@ -28,7 +28,7 @@ export async function POST({ request, cookies }) {
             WHERE task_id = ? AND version = ?`, 
             [task_id, version]);
         const task = await db.send_ecran(
-            `SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note 
+            `SELECT name, time_limit, memory_limit, statement, input_statement, output_statement, note
             FROM task 
             WHERE task_id = ? AND version = ?`, 
             [task_id, version]);

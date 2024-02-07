@@ -24,7 +24,7 @@
                 <a href="/authorization/logout" on:click={closeBurgerMenu}><p class="menu_text">Вийти з акаунту {data.username}</p></a>
             {:else}
                 <a href="/authorization/login" on:click={closeBurgerMenu}><p class="menu_text">Увійти</p></a> 
-                <a href="/authorization/register" on:click={closeBurgerMenu}><p class="menu_text">Зареэструватись</p></a> 
+                <a href="/authorization/register" on:click={closeBurgerMenu}><p class="menu_text">Зареєструватися</p></a> 
             {/if}
         </div>
     </nav>

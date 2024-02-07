@@ -9,7 +9,7 @@
 
 <main>
     <div style="padding: 2vw;">
-        <p>Мої завдання</p>
+        <p>Мої задачі</p>
         <table>
             <tr>
                 <th>ID задачі</th>
