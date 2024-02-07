@@ -69,5 +69,5 @@ export async function POST({ request }) {
     }
     
 
-    return json({task, test});
+    return json({...task, test});
 }
