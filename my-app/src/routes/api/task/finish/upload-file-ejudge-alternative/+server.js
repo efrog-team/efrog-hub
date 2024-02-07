@@ -1,161 +1,95 @@
 import { json } from '@sveltejs/kit';
-import AdmZip from 'adm-zip';
-import xml2js from 'xml2js';
+import fse from 'fs-extra';
+import { getClientrId } from '$lib/server/main';
+import { authorization } from '$lib/server/check.js';
+import { spawnSync } from 'child_process';
+import path from 'path';
 
-let name = "";
-let time_limit = "";
-let memory_limit = "";
-let statement = "";
-let input_statement = "";
-let output_statement = "";
-let note = "";
-let test = [];
-
-function clear_dir (main_path) {
-    fs.rmdir( main_path, { recursive:true }, (err) => { 
-        console.error(err); 
-      });
-}
-
-function processObject(obj) {
-    let result = '';
-  
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const value = obj[key];
-  
-        result += value;
-
-        if (key === 'p' || key === 'br') {
-          result += '\n';
-        }
-      }
-    }
-    if (result.endsWith('\n')) {
-        result = result.slice(0, -1);
-      }
-
-    return result;
-  }
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST( {request, cookies} ) {
-
-    const formData = await request.formData();
-    const file = formData.get('file');
-    const taskName = formData.get('taskName');
-    const curent_sesion = cookies.get("token");
-    test = [];
-
-    
-    if (fs.existsSync("./static/download/"+ curent_sesion)){
-        clear_dir ("./static/download/"+ curent_sesion);
-    }
-    fs.mkdirSync("./static/download/"+ curent_sesion);
-
-    let targetFilePath = "./static/download/" + curent_sesion + "/" + file.name;
-    const fileBuffer = await file.arrayBuffer();
-    fs.writeFileSync(targetFilePath, new Uint8Array(fileBuffer));
-
-    let zip = new AdmZip(targetFilePath);
-    zip.extractAllTo("./static/download/" + curent_sesion + "/");
-    fs.unlinkSync(targetFilePath);
-    
-    let main_path = "./static/download/"+ curent_sesion + "/";
-    const contests =  fs.readdirSync(main_path);
-
-    let contest_path = main_path + contests[0] + "/";
-
-
-    // перевіряємо директорію контесту на перелік обов'язкових директорій
-    if (!fs.existsSync(contest_path + taskName)){
-        clear_dir (main_path);
-        return json({ error: `Directory ${taskName} does not exist` }, { status: 404 });
-    }
-
-
-    if (!fs.existsSync(contest_path + taskName + "/" +'tests')){
-        clear_dir (main_path);
-        return json({ error: `Directory ${taskName}/tests does not exist` }, { status: 404 });
-    }
-
-    if (!fs.existsSync(contest_path + taskName + "/" +'statement.xml')){
-        clear_dir (main_path);
-        return json({ error: `File ${taskName}/statement.xml does not exist` }, { status: 404 });
-    }
-
-  
-    // Записуємо дані з файлу statement.xml
-    const readFilePromise = new Promise((resolve, reject) => {
-        fs.readFile(contest_path + "/" + taskName + "/" + "statement.xml", "utf-8", (err, data) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        });
-    });
-    
     try {
-        // Чекаємл завершення читання файлу
-        const data = await readFilePromise;
-        
-        // трансформуємо XML у JS
-        const result = await new Promise((resolve, reject) => {
-            xml2js.parseString(data, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
+     // Check authorization
+     const formData = await request.formData();
+     const curent_sesion = cookies.get('token');
+     const task_id =  formData.get('task_id');
 
-        // Отримання даних задачі з файлу xml
-        name = result.problem.statement[0].title[0];
-        time_limit = 5;
-        memory_limit = 256;
+     const userId = await getClientrId(curent_sesion);
+     const verdict = await authorization(task_id, userId);
 
+     if (!verdict) {
+         return json({ error: `Tou are not author of that task` }, { status: 403 });
+     }
 
-        statement = processObject(result.problem.statement[0].description[0]);
-        input_statement = processObject(result.problem.statement[0].input_format[0]);
-        output_statement = processObject(result.problem.statement[0].output_format[0]);
-        note = processObject(result.problem.statement[0].notes[0]);
+     // Get task arhive and save them into folder
+     const file = formData.get('file');
+     const taskName = formData.get('taskName');
+     const fileName = file.name;
 
-        console.log(result.problem.examples)
-        const examples = result.problem.examples[0].example;
+     const reader = file.stream().getReader();
+     let chunks = [];
 
-        for(let i = 0; i < examples.length; i++){
-            test.push({test_id: test.length + 1, input: examples[i].input[0], output: examples[i].output[0], status: "Opened"});
-        }
+     while (true) {
+     const { done, value } = await reader.read();
+     if (done) break;
 
-        const userTests = fs.readdirSync(contest_path  + taskName + "/" + 'tests' );
-        
-        for(let i = 0; i < userTests.length; i ++){
+     chunks.push(value);
+     }
 
-            if(userTests[i].split(".")[1] == "answ"){
-                const ouput_format = fs.readFileSync(contest_path + taskName + "/" + 'tests' + "/"  + userTests[i], 'utf-8');
+     const fileBuffer = Buffer.concat(chunks);
+     const base64String = fileBuffer.toString('base64');
 
-                if (!fs.existsSync(contest_path + taskName + "/" + 'tests' + "/" + userTests[i].split(".")[0] + ".dat")){
-                    clear_dir (main_path);
-                    return json({ error: `There is ${userTests[i]}, but no ${userTests[i].split(".")[0] + ".dat"}`  }, { status: 404 });
-                }
+     const command = 'node';
+     // Get patht to process file
+     const targetFileName = 'src/lib/upload/ejudge-alternative.js';
+     const currentDirectory = path.resolve();
+     const scriptPath = path.resolve(currentDirectory, targetFileName);
 
-                const input_format = fs.readFileSync(contest_path + taskName + "/" + 'tests' + "/" + userTests[i].split(".")[0] + ".dat", 'utf-8');
+     const inputData = JSON.stringify({
+         base64String,
+         curent_sesion,
+         currentDirectory,
+         fileName,
+         taskName
+     });
+     
+     const options = {
+         input: inputData, 
+         stdio: 'pipe',
+         uid: 65534
+     };
+     
+     const result = spawnSync(command, [scriptPath], options);
 
-                test.push({ test_id: test.length + 1, input: input_format, output: ouput_format, status: "Closed" });
-            }
+     if (result.status === 0) {
+         if (result.stdout) {
+             const data = JSON.parse(result.stdout.toString());
+             if(data.error){
+                 return json({ error: data.error }, { status: data.status });
+             }
+             else{
+                 return(json(data));
+             }
+         } else {
+             return json({ error: "Unexpected error occurred during reading data" }, { status: 500 });
+         }
 
-
-        }
-        
-        return json({ name, time_limit, memory_limit, statement, input_statement, output_statement, note, test });
+     } else{
+         if (result.stderr) {
+             const stderrString = result.stderr.toString();
+             console.log(stderrString);
+             return json({ error: stderrString }, { status: 404 });
+         } else {
+             return json({ error: "Unexpected error occurred" }, { status: 500 });
+         }
+         
+     };
     } catch (err) {
         console.error('Произошла ошибка:', err);
         return json({ error: "An error occurred" }, { status: 500 });
     } finally {
-        clear_dir(main_path);
+        const curent_sesion = cookies.get('token');
+        let error_path = "./files/upload/ejudge_a" + curent_sesion;
+        fse.removeSync(error_path);
     }
-
 }
- 
