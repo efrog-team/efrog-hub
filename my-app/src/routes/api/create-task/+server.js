@@ -12,9 +12,9 @@ export async function POST({ request }) {
     
     await db.send_ecran(
         `INSERT INTO task 
-        (task_id, name, version, time_limit, memory_limit, statement, input_statement, output_statement, note, is_checker) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
-        [taskId, name, 0, 1, 256, '', '', '', '', 0]);
+        (task_id, name, version, version_name, time_limit, memory_limit, statement, input_statement, output_statement, note, is_checker) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+        [taskId, name, 0, 'Start', 1, 256, '', '', '', '', 0]);
 
     await db.send_ecran(
         `INSERT INTO author 
